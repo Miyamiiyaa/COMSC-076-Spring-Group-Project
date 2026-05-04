@@ -1,0 +1,27 @@
+name: Checkstyle
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  checkstyle:
+    name: Run Checkstyle
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Run Checkstyle
+        uses: dbelyaev/action-checkstyle@v1.15.0
+        with:
+          checkstyle_config: .style/checkstyle.xml
+          reporter: github-pr-review
+          fail_on_error: true

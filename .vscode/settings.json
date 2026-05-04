@@ -1,0 +1,5 @@
+{
+    "java.format.settings.url": ".style/java-style.xml",
+    "java.format.settings.profile": "Class-Style-Guide",
+    "editor.formatOnSave": true
+}
