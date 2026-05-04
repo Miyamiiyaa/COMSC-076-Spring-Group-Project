@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class Library {
 
     // Using HashMap as the data structure for storing books in the library
-    HashMap<Integer, Book> books = new HashMap<>(); // key is ISBN of the book
+    HashMap<String, Book> books = new HashMap<>(); // key is ISBN of the book
 
     /**
      * @return the number of books (not number of copies) in the library.
@@ -26,7 +26,7 @@ public class Library {
      * adds the number of copies the library has.
      */
     public void addBook(Book book) {
-        int isbn = book.getISBN();
+        String isbn = book.getISBN();
         if (books.containsKey(isbn)) {
             // book already exists, increment the number of copies
             Book existingBook = books.get(isbn);
