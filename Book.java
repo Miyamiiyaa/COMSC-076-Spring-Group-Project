@@ -1,5 +1,6 @@
 /**
  * Encapusulates information about a book.
+ * 
  * @author Balaji Srinivasan
  */
 public class Book {
@@ -9,12 +10,13 @@ public class Book {
     int publicationYear;
     // number of copies in the library
     // NOTE: This is not the number of copies available in the library
-    int numberOfCopies; 
+    int numberOfCopies;
 
     /**
      * Constructor. Most properties (except number of copies are read only)
      */
-    public Book(String title, String author, String isbn, int publicationYear, int numberOfCopies) {
+    public Book(String title, String author, String isbn,
+            int publicationYear, int numberOfCopies) {
         this.title = title;
         this.author = author;
         this.isbn = isbn;
@@ -80,17 +82,19 @@ public class Book {
         numberOfCopies += numCopiesToAdd;
     }
 
-    /** 
+    /**
      * Checks out a book (decrements number of copies available in the library)
+     * 
      * @throws RuntimeException if no copies are available to check out.
      */
     public void checkout() {
         // TODO: Implement this method.
         throw new UnsupportedOperationException("Not implemented");
-    } 
+    }
 
-    /** 
+    /**
      * Checks in a book into the library.
+     * 
      * @throws RuntimeException if no copies have been checked out.
      */
     public void checkin() {
@@ -107,7 +111,8 @@ public class Book {
     @Override
     public boolean equals(Object that) {
         // TODO: Implement this method.
-        // NOTE: Two books are the same only if the Title, Author, and ISBN matches
+        // NOTE: Two books are the same only if the Title, Author, and ISBN
+        // matches
         throw new UnsupportedOperationException("Not implemented");
     }
 }
