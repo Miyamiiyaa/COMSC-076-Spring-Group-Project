@@ -1,4 +1,6 @@
 package src;
+
+import java.util.HashMap;
 import java.util.Scanner;
 
 /**
@@ -8,12 +10,15 @@ import java.util.Scanner;
  */
 public class Library {
 
+    // Using HashMap as the data structure for storing books in the library
+    HashMap<Integer, Book> books = new HashMap<>(); // key is ISBN of the book
+
     /**
      * @return the number of books (not number of copies) in the library.
      */
     public int getNumberOfBooks() {
-        // TODO: Implement this method.
-        throw new UnsupportedOperationException("not implemented");
+        return books.size(); // returns the number of books, excluding multiple
+                             // copies of each book.
     }
 
     /**
@@ -21,8 +26,15 @@ public class Library {
      * adds the number of copies the library has.
      */
     public void addBook(Book book) {
-        // TODO: Implement this method.
-        throw new UnsupportedOperationException("not implemented");
+        int isbn = book.getISBN();
+        if (books.containsKey(isbn)) {
+            // book already exists, increment the number of copies
+            Book existingBook = books.get(isbn);
+            existingBook.numberOfCopies += book.getNumberOfCopies();
+        } else {
+            // book doesnt exist in the library. Add it to the library.
+            books.put(isbn, book);
+        }
     }
 
     /**
