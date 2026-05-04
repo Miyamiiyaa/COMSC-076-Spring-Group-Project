@@ -68,10 +68,10 @@ Other resources referenced to implement this projected are included directly inl
 
 ### Members
 
-Eric Chevrie
-Evan Ha
-Jesse Hawkes
-Marlon Lopez Rivera
-Joseph Moneteon
-Aksham Tuteja
+- Eric Chevrie
+- Evan Ha
+- Jesse Hawkes
+- Marlon Lopez Rivera
+- Joseph Moneteon
+- Aksham Tuteja
 
