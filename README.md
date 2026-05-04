@@ -50,7 +50,9 @@ Alternatively you can open a terminal and type this command:
     ```
 4. Install the recommended extensions (or at least the stylechecker). If VScode does not prompt you to install them, you can search "@recommended" in the extensions panel on the left.
 5. Create a `branch` for your responsibilities. The main branch is protected and requires a pull request. To create a branch, you can use `git checkout -b name-the-branch` from the terminal, or you can press this button in the source control panel:
+
 ![branch](documents/readme-images/branch.png)
+
 6. When you are done writing code, commit and push your changes.
 7. Submit a pull request for another group member to review your code. You can do this on github.
 
