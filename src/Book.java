@@ -1,4 +1,5 @@
 package src;
+
 /**
  * Encapusulates information about a book.
  * 
@@ -42,7 +43,7 @@ public class Book {
     /**
      * @return the ISBN for this book.
      */
-    public String getIsbn() {
+    public String getISBN() {
         return isbn;
     }
 
