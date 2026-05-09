@@ -1,0 +1,22 @@
+# Compiled files
+*.class
+bin/
+out/
+
+# Lang Server
+.project
+.classpath
+.factorypath
+.settings/
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Libraries
+/lib
