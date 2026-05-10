@@ -1,0 +1,13 @@
+*.class
+*.jar
+
+lib/
+
+.classpath
+.project
+.settings/
+bin/
+out/
+
+.DS_Store
+Thumbs.db
