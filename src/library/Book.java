@@ -1,4 +1,4 @@
-package src;
+package library;
 
 /**
  * Encapusulates information about a book.
