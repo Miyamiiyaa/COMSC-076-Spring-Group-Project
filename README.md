@@ -14,16 +14,6 @@ Additionally this project considers:
 - The code is designed to be modular and well-organized, making it easier to maintain and extend in the future.
 - The code is thoroughly documented, including Big-O analysis of the various methods in the `Library` class.
 
-## Responsibility Distribution
-
-- Implementation for adding and removing books from the library:
-- Implementation for searching, borrowing, and returning books:
-- Implementation for read/write of library contents to file:
-- Implementation for parsing and serializing book data:
-- Implementing testing and integration:
-- Implementing graceful exception and error handling:
-- Ensuring proper documentation and code comments:
-
 ## Setup & Requirements
 
 This project follows the class style guide ([documents/Java Style Guidelines.pdf](documents/Java%20Style%20Guidelines.pdf)). I encoded the rules to [.style/java-style.xml](.style/java-style.xml) (the formatter) and [.style/checkstyle.xml](.style/checkstyle.xml) (linter rules). 
