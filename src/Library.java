@@ -30,7 +30,7 @@ public class Library {
         if (books.containsKey(isbn)) {
             // book already exists, increment the number of copies
             Book existingBook = books.get(isbn);
-            existingBook.numberOfCopies += book.getNumberOfCopies();
+            existingBook.addCopies(book.getNumberOfCopies());
         } else {
             // book doesnt exist in the library. Add it to the library.
             books.put(isbn, book);
