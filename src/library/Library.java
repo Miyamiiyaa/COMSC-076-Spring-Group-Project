@@ -27,6 +27,7 @@ public class Library {
      */
     public void addBook(Book book) {
         String isbn = book.getISBN();
+
         if (books.containsKey(isbn)) {
             // book already exists, increment the number of copies
             Book existingBook = books.get(isbn);
@@ -35,6 +36,18 @@ public class Library {
             // book doesnt exist in the library. Add it to the library.
             books.put(isbn, book);
         }
+    }
+
+    /**
+     * Removes a book from the library using its ISBN.
+     */
+    public void removeBook(String isbn) {
+        if (!books.containsKey(isbn)) {
+            throw new RuntimeException(
+                    "Book with ISBN " + isbn + " does not exist.");
+        }
+
+        books.remove(isbn);
     }
 
     /**
@@ -91,19 +104,72 @@ public class Library {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        Library library = new Library();
 
         while (true) {
             System.out.print("library> ");
             String line = scanner.nextLine();
             // TODO: Implement code
             if (line.startsWith("add")) {
-                // TODO: Implement this case.
                 // The format of the line is
                 // add title author isbn publicationYear numberOfCopies
                 // e.g. add Star_Trek Gene_Roddenberry ISBN-1234 1965 10
                 // NOTE: If a book already exists in the library, then the
                 // number of copies should be incremented by this amount.
-                // Do appropriate error checking here.
+
+                try {
+                    String[] parts = line.split("\\s+");
+
+                    if (parts.length != 6) {
+                        System.out.println(
+                                "Error: add format is add title author isbn publicationYear numberOfCopies");
+                        continue;
+                    }
+
+                    String title = parts[1];
+                    String author = parts[2];
+                    String isbn = parts[3];
+                    int publicationYear = Integer.parseInt(parts[4]);
+                    int numberOfCopies = Integer.parseInt(parts[5]);
+
+                    Book book = new Book(title, author, isbn,
+                            publicationYear, numberOfCopies);
+
+                    library.addBook(book);
+
+                    System.out.println("Book added successfully.");
+
+                } catch (NumberFormatException e) {
+                    System.out.println(
+                            "Error: publication year and number of copies must be numbers.");
+                } catch (RuntimeException e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
+
+            } else if (line.startsWith("remove")) {
+                // Format of the line is
+                // remove <isbn>
+                // e.g. remove ISBN-1234
+
+                try {
+                    String[] parts = line.split("\\s+");
+
+                    if (parts.length != 2) {
+                        System.out.println(
+                                "Error: remove format is remove isbn");
+                        continue;
+                    }
+
+                    String isbn = parts[1];
+
+                    library.removeBook(isbn);
+
+                    System.out.println("Book removed successfully.");
+
+                } catch (RuntimeException e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
+
             } else if (line.startsWith("checkout")) {
                 // TODO: Implement this case.
                 // The format of the line is
