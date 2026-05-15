@@ -142,7 +142,8 @@ public class Library {
 
                 } catch (NumberFormatException e) {
                     System.out.println(
-                            "Error: publication year and number of copies must be numbers.");
+                            "Error: publication year and number "
+                            +  "of copies must be numbers.");
                 } catch (RuntimeException e) {
                     System.out.println("Error: " + e.getMessage());
                 }
