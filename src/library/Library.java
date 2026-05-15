@@ -25,7 +25,8 @@ public class Library {
     }
 
     /**
-     * Adds a book to the library. If the library already has this book then it adds
+     * Adds a book to the library. 
+     * If the library already has this book then it adds
      * the number of copies the library has.
      */
     public void addBook(Book book) {
@@ -81,15 +82,20 @@ public class Library {
     public void save(String filename) {
         try {
             PrintWriter writer = new PrintWriter(filename);
-
             for (Book book : booksByIsbn.values()) {
-                writer.println(book.getTitle() + " " + book.getAuthor() + " " + book.getIsbn() + " "
-                        + book.getPublicationYear() + " " + book.getNumberOfCopies() + " " + book.getAvailableCopies());
+                writer.println(
+                book.getTitle() + " " + 
+                book.getAuthor() + " " + 
+                book.getIsbn() + " " + 
+                book.getPublicationYear() + " " + 
+                book.getNumberOfCopies() + " " + 
+                book.getAvailableCopies());
             }
 
             writer.close();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Could not save file: " + filename);
+            throw new RuntimeException(
+                    "Could not save file: " + filename);
         }
     }
 
@@ -111,7 +117,9 @@ public class Library {
                 int numberOfCopies = scanner.nextInt();
                 int availableCopies = scanner.nextInt();
 
-                Book book = new Book(title, author, isbn, publicationYear, numberOfCopies);
+                Book book = new Book(
+                        title, author, isbn, 
+                        publicationYear, numberOfCopies);
                 book.setAvailableCopies(availableCopies);
 
                 booksByIsbn.put(isbn, book);
@@ -119,7 +127,8 @@ public class Library {
 
             scanner.close();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Could not load file: " + filename);
+            throw new RuntimeException(
+                    "Could not load file: " + filename);
         }
     }
 

@@ -17,6 +17,12 @@ public class Book {
 
     /**
      * Constructor. Most properties (except number of copies are read only)
+     * 
+     * @param title the title of the book
+     * @param author the author of the book
+     * @param isb the ISBN of the book
+     * @param publicationYear the publication year
+     * @param numberOfCopies total number of copies
      */
     public Book(String title, String author, String isbn, int publicationYear, int numberOfCopies) {
         this.title = title;
@@ -74,7 +80,8 @@ public class Book {
      */
     public void setAvailableCopies(int numCopies) {
         if (numCopies < 0 || numCopies > numberOfCopies) {
-            throw new IllegalArgumentException("Available copies must be between 0 and total copies");
+            throw new IllegalArgumentException(
+                    "Available copies must be between 0 and total copies");
         }
 
         availableCopies = numCopies;
