@@ -84,18 +84,19 @@ public class Library {
         	
         	for (Book book : booksByIsbn.values()) {
         		writer.println(
-        				book.getTitle() + " " +
-        				book.getAuthor() + " " +
-        				book.getIsbn() + " " +
-        				book.getPublicationYear() + " " +
-        				book.getNumberOfCopies() + " " +
-        				book.getAvailableCopies()
+        				book.getTitle() + " " + 
+        		        book.getAuthor() + " " + 
+        				book.getIsbn() + " " + 
+        		        book.getPublicationYear() + " " + 
+        				book.getNumberOfCopies() + " " + 
+        		        book.getAvailableCopies()
         			);
         	}
         	
         	writer.close();
         } catch (FileNotFoundException e) {
-        	throw new RuntimeException("Could not save file: " + filename);
+        	throw new RuntimeException(
+        			"Could not save file: " + filename);
         }
     }
 
@@ -125,7 +126,8 @@ public class Library {
         	
         	scanner.close();
         } catch (FileNotFoundException e) {
-        	throw new RuntimeException("Could not load file: " + filename);
+        	throw new RuntimeException(
+        			"Could not load file: " + filename);
         }
     }
 

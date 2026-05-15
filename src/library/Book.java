@@ -75,7 +75,8 @@ public class Book {
      */
     public void setAvailableCopies(int numCopies) {
         if (numCopies < 0 || numCopies > numberOfCopies) {
-        	throw new IllegalArgumentException("Available copies must be between 0 and total copies");
+        	throw new IllegalArgumentException(
+        			"Available copies must be between 0 and total copies");
         }
         
         availableCopies = numCopies;
