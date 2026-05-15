@@ -42,7 +42,8 @@ public class Library {
     }
 
     /**
-     * Checks out the given book from the library. Throw the appropriate exception
+     * Checks out the given book from the library. 
+     * Throw the appropriate exception
      * if book doesnt exist or there are no more copies available.
      */
     public void checkout(String isbn) {
@@ -100,8 +101,9 @@ public class Library {
     }
 
     /**
-     * Loads the contents of this library from the given file. All existing data in
-     * this library is cleared before loading from the file.
+     * Loads the contents of this library from the given file. 
+     * All existing data in this library is 
+     * cleared before loading from the file.
      */
     public void load(String filename) {
         try {
