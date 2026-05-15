@@ -43,7 +43,7 @@ public class Library {
      */
     public void removeBook(String isbn) {
         if (!books.containsKey(isbn)) {
-            throw new RuntimeException(
+            throw new java.util.NoSuchElementException(
                     "Book with ISBN " + isbn + " does not exist.");
         }
 
@@ -124,28 +124,37 @@ public class Library {
                         System.out.println(
                                 "Error: add format is add title author "
                                 + "isbn publicationYear numberOfCopies");
-                        continue;
+                    } else {
+                        String title = parts[1];
+                        String author = parts[2];
+                        String isbn = parts[3];
+
+                        int publicationYear =
+                                Integer.parseInt(parts[4]);
+
+                        int numberOfCopies =
+                                Integer.parseInt(parts[5]);
+
+                        Book book = new Book(
+                                title,
+                                author,
+                                isbn,
+                                publicationYear,
+                                numberOfCopies);
+
+                        library.addBook(book);
+
+                        System.out.println(
+                                "Book added successfully.");
                     }
-
-                    String title = parts[1];
-                    String author = parts[2];
-                    String isbn = parts[3];
-                    int publicationYear = Integer.parseInt(parts[4]);
-                    int numberOfCopies = Integer.parseInt(parts[5]);
-
-                    Book book = new Book(title, author, isbn,
-                            publicationYear, numberOfCopies);
-
-                    library.addBook(book);
-
-                    System.out.println("Book added successfully.");
 
                 } catch (NumberFormatException e) {
                     System.out.println(
                             "Error: publication year and number "
-                            +  "of copies must be numbers.");
+                            + "of copies must be numbers.");
                 } catch (RuntimeException e) {
-                    System.out.println("Error: " + e.getMessage());
+                    System.out.println(
+                            "Error: " + e.getMessage());
                 }
 
             } else if (line.startsWith("remove")) {
@@ -159,17 +168,18 @@ public class Library {
                     if (parts.length != 2) {
                         System.out.println(
                                 "Error: remove format is remove isbn");
-                        continue;
+                    } else {
+                        String isbn = parts[1];
+
+                        library.removeBook(isbn);
+
+                        System.out.println(
+                                "Book removed successfully.");
                     }
 
-                    String isbn = parts[1];
-
-                    library.removeBook(isbn);
-
-                    System.out.println("Book removed successfully.");
-
                 } catch (RuntimeException e) {
-                    System.out.println("Error: " + e.getMessage());
+                    System.out.println(
+                            "Error: " + e.getMessage());
                 }
 
             } else if (line.startsWith("checkout")) {
@@ -179,6 +189,7 @@ public class Library {
                 // e.g. checkout ISBN-1234
                 // NOTE: If the book doesnt exist in the library, then the code
                 // should print an error.
+
             } else if (line.startsWith("findByTitleAndAuthor")) {
                 // TODO: Implement this case.
                 // The format of the line is
@@ -189,6 +200,7 @@ public class Library {
                 // If the book exists in the library, this code should print the
                 // ISBN, number of copies in the library, and the number of
                 // copies availabvle
+
             } else if (line.startsWith("return")) {
                 // TODO: Implement this case.
                 // Format of the line is
@@ -196,6 +208,7 @@ public class Library {
                 // e.g. return ISBN-1234
                 // NOTE: If the book was never checked out, this code should
                 // print an error.
+
             } else if (line.startsWith("list")) {
                 // TODO: Implement this case.
                 // Format of the line is
@@ -203,16 +216,19 @@ public class Library {
                 // e.g. list ISBN-1234
                 // NOTE: This code should print out the number of copies in the
                 // library and the number of copies available.
+
             } else if (line.startsWith("save")) {
                 // TODO: Implement this case.
                 // Format of the line is
                 // save <filename>
                 // e.g. save LbraryFile.dat
+
             } else if (line.startsWith("load")) {
                 // TODO: Implement this case.
                 // Format of the line is:
                 // load <filename>
                 // e.g. load LibraryFile.dat
+
             } else if (line.startsWith("exit")) {
                 break;
             }
