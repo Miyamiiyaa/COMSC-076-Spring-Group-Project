@@ -122,7 +122,8 @@ public class Library {
 
                     if (parts.length != 6) {
                         System.out.println(
-                                "Error: add format is add title author isbn publicationYear numberOfCopies");
+                                "Error: add format is add title author "
+                                + "isbn publicationYear numberOfCopies");
                         continue;
                     }
 
