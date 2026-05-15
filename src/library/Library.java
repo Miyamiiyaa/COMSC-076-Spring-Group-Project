@@ -2,6 +2,9 @@ package library;
 
 import java.util.HashMap;
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 
 /**
  * A library management class. Has a simple shell that users can interact with
@@ -76,8 +79,24 @@ public class Library {
      * Saves the contents of this library to the given file.
      */
     public void save(String filename) {
-        // TODO: Implement this method.
-        throw new UnsupportedOperationException("not implemented");
+        try {
+        	PrintWriter writer = new PrintWriter(filename);
+        	
+        	for (Book book : booksByIsbn.values()) {
+        		writer.println(
+        				book.getTitle() + " " +
+        				book.getAuthor() + " " +
+        				book.getIsbn() + " " +
+        				book.getPublicationYear() + " " +
+        				book.getNumberOfCopies() + " " +
+        				book.getAvailableCopies()
+        			);
+        	}
+        	
+        	writer.close();
+        } catch (FileNotFoundException e) {
+        	throw new RuntimeException("Could not save file: " + filename);
+        }
     }
 
     /**
@@ -85,8 +104,29 @@ public class Library {
      * in this library is cleared before loading from the file.
      */
     public void load(String filename) {
-        // TODO: Implement this method.
-        throw new UnsupportedOperationException("not implemented");
+        try {
+        	Scanner scanner = new Scanner(new File(filename));
+        	
+        	booksByIsbn.clear();
+        	
+        	while (scanner.hasNext()) {
+        		String title = scanner.next();
+        		String author = scanner.next();
+        		String isbn = scanner.next();
+        		int publicationYear = scanner.nextInt();
+        		int numberOfCopies = scanner.nextInt();
+        		int availableCopies = scanner.nextInt();
+        		
+        		Book book = new Book(title, author, isbn, publicationYear, numberOfCopies);
+        		book.setAvailableCopies(availableCopies);
+        		
+        		booksByIsbn.put(isbn, book);
+        	}
+        	
+        	scanner.close();
+        } catch (FileNotFoundException e) {
+        	throw new RuntimeException("Could not load file: " + filename);
+        }
     }
 
     public static void main(String[] args) {

@@ -13,6 +13,7 @@ public class Book {
     // number of copies in the library
     // NOTE: This is not the number of copies available in the library
     int numberOfCopies;
+    int availableCopies;
 
     /**
      * Constructor. Most properties (except number of copies are read only)
@@ -24,6 +25,7 @@ public class Book {
         this.isbn = isbn;
         this.publicationYear = publicationYear;
         this.numberOfCopies = numberOfCopies;
+        this.availableCopies = numberOfCopies;
     }
 
     /**
@@ -65,16 +67,18 @@ public class Book {
      * @return The number of available copies of this book.
      */
     public int getAvailableCopies() {
-        // TODO: Implement this method.
-        throw new UnsupportedOperationException("Not implemented");
+        return availableCopies;
     }
 
     /**
      * Sets the number of available copies. Just used for testing.
      */
     public void setAvailableCopies(int numCopies) {
-        // TODO: Implement this method.
-        throw new UnsupportedOperationException("Not implemented");
+        if (numCopies < 0 || numCopies > numberOfCopies) {
+        	throw new IllegalArgumentException("Available copies must be between 0 and total copies");
+        }
+        
+        availableCopies = numCopies;
     }
 
     /**
