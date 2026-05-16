@@ -125,7 +125,7 @@ public class Library {
         try {
             Scanner scanner = new Scanner(new File(filename));
 
-            booksByIsbn.clear();
+            books.clear();
 
             while (scanner.hasNext()) {
                 String title = scanner.next();
@@ -139,7 +139,7 @@ public class Library {
                         numberOfCopies);
                 book.setAvailableCopies(availableCopies);
 
-                booksByIsbn.put(isbn, book);
+                books.put(isbn, book);
             }
 
             scanner.close();
