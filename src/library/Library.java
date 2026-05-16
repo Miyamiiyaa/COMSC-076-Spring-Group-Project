@@ -150,7 +150,7 @@ public class Library {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-
+        Library lib = new Library();
         while (true) {
             System.out.print("library> ");
             String line = scanner.nextLine();
@@ -199,11 +199,29 @@ public class Library {
                 // Format of the line is
                 // save <filename>
                 // e.g. save LbraryFile.dat
+
+                String[] parts = line.split(" ");
+                String filename = parts[1];
+
+                if (!filename.endsWith(".json")) {
+                    filename += ".json";
+                }
+                lib.save(filename);
+
             } else if (line.startsWith("load")) {
                 // TODO: Implement this case.
                 // Format of the line is:
                 // load <filename>
                 // e.g. load LibraryFile.dat
+                String[] parts = line.split(" ");
+                String filename = parts[1];
+
+                if (!filename.endsWith(".json")) {
+                    filename += ".json";
+                }
+
+                lib.load(filename);
+
             } else if (line.startsWith("exit")) {
                 break;
             }
