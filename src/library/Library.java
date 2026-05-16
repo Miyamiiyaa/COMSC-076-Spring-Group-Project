@@ -101,10 +101,11 @@ public class Library {
                         + book.getAvailableCopies());
                 writer.print("  }");
 
-                if (++count < size)
+                if (++count < size) {
                     writer.println(",");
-                else
+                } else {
                     writer.println();
+                }
             }
 
             writer.println("]");
