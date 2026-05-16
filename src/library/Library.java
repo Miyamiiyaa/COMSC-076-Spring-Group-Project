@@ -25,9 +25,8 @@ public class Library {
     }
 
     /**
-     * Adds a book to the library. 
-     * If the library already has this book then it adds
-     * the number of copies the library has.
+     * Adds a book to the library. If the library already has this book then it
+     * adds the number of copies the library has.
      */
     public void addBook(Book book) {
         String isbn = book.getISBN();
@@ -42,9 +41,8 @@ public class Library {
     }
 
     /**
-     * Checks out the given book from the library. 
-     * Throw the appropriate exception
-     * if book doesnt exist or there are no more copies available.
+     * Checks out the given book from the library. Throw the appropriate
+     * exception if book doesnt exist or there are no more copies available.
      */
     public void checkout(String isbn) {
         // TODO: Implement this method.
@@ -81,29 +79,47 @@ public class Library {
      * Saves the contents of this library to the given file.
      */
     public void save(String filename) {
-        try {
-            PrintWriter writer = new PrintWriter(filename);
-            for (Book book : booksByIsbn.values()) {
+        try (PrintWriter writer = new PrintWriter(filename)) {
+
+            writer.println("[");
+            int count = 0;
+            int size = books.size();
+
+            for (Book book : books.values()) {
+                writer.println("  {");
                 writer.println(
-                book.getTitle() + " " + 
-                book.getAuthor() + " " + 
-                book.getIsbn() + " " + 
-                book.getPublicationYear() + " " + 
-                book.getNumberOfCopies() + " " + 
-                book.getAvailableCopies());
+                        "    \"title\": \"" + book.getTitle() + "\",");
+                writer.println(
+                        "    \"author\": \"" + book.getAuthor() + "\",");
+                writer.println(
+                        "    \"isbn\": \"" + book.getISBN() + "\",");
+                writer.println("    \"publicationYear\": "
+                        + book.getPublicationYear() + ",");
+                writer.println("    \"numberOfCopies\": "
+                        + book.getNumberOfCopies() + ",");
+                writer.println("    \"availableCopies\": "
+                        + book.getAvailableCopies());
+                writer.print("  }");
+
+                if (++count < size)
+                    writer.println(",");
+                else
+                    writer.println();
             }
 
-            writer.close();
+            writer.println("]");
+
+            System.out.println("Saved to: "
+                    + new java.io.File(filename).getAbsolutePath());
+
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(
-                    "Could not save file: " + filename);
+            throw new RuntimeException("Could not save file: " + filename);
         }
     }
 
     /**
-     * Loads the contents of this library from the given file. 
-     * All existing data in this library is 
-     * cleared before loading from the file.
+     * Loads the contents of this library from the given file. All existing data
+     * in this library is cleared before loading from the file.
      */
     public void load(String filename) {
         try {
@@ -119,9 +135,8 @@ public class Library {
                 int numberOfCopies = scanner.nextInt();
                 int availableCopies = scanner.nextInt();
 
-                Book book = new Book(
-                        title, author, isbn, 
-                        publicationYear, numberOfCopies);
+                Book book = new Book(title, author, isbn, publicationYear,
+                        numberOfCopies);
                 book.setAvailableCopies(availableCopies);
 
                 booksByIsbn.put(isbn, book);
@@ -129,8 +144,7 @@ public class Library {
 
             scanner.close();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(
-                    "Could not load file: " + filename);
+            throw new RuntimeException("Could not load file: " + filename);
         }
     }
 
