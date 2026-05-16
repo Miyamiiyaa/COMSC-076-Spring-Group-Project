@@ -38,9 +38,11 @@ public class Library {
         }
     }
 
-    /**
-     * Removes a book from the library using its ISBN.
-     */
+   /**
+ * Removes a book from the library using its ISBN.
+ *
+ * @param isbn the ISBN of the book to remove
+ */
     public void removeBook(String isbn) {
         if (!books.containsKey(isbn)) {
             throw new java.util.NoSuchElementException(
