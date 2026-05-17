@@ -1,5 +1,7 @@
 package library;
 
+import java.util.Objects;
+
 /**
  * Encapusulates information about a book.
  * 
@@ -118,15 +120,20 @@ public class Book {
 
     @Override
     public int hashCode() {
-        // TODO: Implement an appropriate hash code for a book.
-        throw new UnsupportedOperationException("Not implemented");
+        return Objects.hash(title, author, isbn);
     }
 
     @Override
     public boolean equals(Object that) {
-        // TODO: Implement this method.
-        // NOTE: Two books are the same only if the Title, Author, and ISBN
-        // matches
-        throw new UnsupportedOperationException("Not implemented");
+        if (this == that) {
+            return true;
+        }
+        if (that == null || getClass() != that.getClass()) {
+            return false;
+        }
+        Book other = (Book) that;
+        return Objects.equals(this.title, other.title)
+                && Objects.equals(this.author, other.author)
+                && Objects.equals(this.isbn, other.isbn);
     }
 }
