@@ -195,7 +195,6 @@ public class BookTests {
 
     @Test @DisplayName("Test adding negative copies")
     void testAddNegativeCopies() {
-        // Negative additions should be rejected; otherwise inventory drifts.
         assertThrows(IllegalArgumentException.class,
                 () -> book.addCopies(-1),
                 "addCopies must reject negative input");
@@ -208,32 +207,49 @@ public class BookTests {
 
     @Test @DisplayName("Test Book Equality")
     void testBookDoesEqual() {
-
+        // copy counts don't matter for equality
+        Book sameIdentity = new Book(TITLE, AUTHOR, ISBN, YEAR,
+                COPIES + 5);
+        sameIdentity.setAvailableCopies(0);
+        assertEquals(book, sameIdentity,
+                "books with the same identity fields should be equal "
+                        + "regardless of copy counts");
     }
 
     @Test @DisplayName("Test Book Inequality")
     void testBookDoesNotEqual() {
+        Book diffTitle = new Book("Other_Title", AUTHOR, ISBN, YEAR,
+                COPIES);
+        Book diffAuthor = new Book(TITLE, "Other_Author", ISBN, YEAR,
+                COPIES);
+        Book diffIsbn = new Book(TITLE, AUTHOR, "ISBN-9999", YEAR, COPIES);
+        Book diffYear = new Book(TITLE, AUTHOR, ISBN, YEAR + 1, COPIES);
 
-    }
-
-    @Test @DisplayName("Test that unequal objects have different hash")
-    void testHashCodeInequality() {
-
-    }
-
-    @Test @DisplayName("Test that a book is equal to itself")
-    void testBookEqualsSelf() {
-        assertTrue(book.equals(book), "A book should be equal to itself");
+        assertNotEquals(book, diffTitle,
+                "books with different titles should not be equal");
+        assertNotEquals(book, diffAuthor,
+                "books with different authors should not be equal");
+        assertNotEquals(book, diffIsbn,
+                "books with different ISBNs should not be equal");
+        assertNotEquals(book, diffYear,
+                "books with different years should not be equal");
     }
 
     @Test @DisplayName("Test that equal objects have same hash")
     void testHashCodeEquality() {
-
+        // ignore copy counts
+        Book sameIdentity = new Book(TITLE, AUTHOR, ISBN, YEAR,
+                COPIES + 5);
+        sameIdentity.setAvailableCopies(2);
+        assertEquals(book.hashCode(), sameIdentity.hashCode(),
+                "equal books must have the same hashCode");
     }
 
-    @Test @DisplayName("Test compare book with Null")
+    @Test @DisplayName("Test compare book with Null or unrelated type")
     void testNullBookEquality() {
-
+        assertNotEquals(book, null, "a Book should never equal null");
+        assertNotEquals(book, "not a book",
+                "a Book should not equal an unrelated type");
     }
 
     @Test @DisplayName("Test proper book string print out")
@@ -295,7 +311,6 @@ public class BookTests {
                 restored.getAvailableCopies(),
                 "availableCopies must survive a serdes round-trip");
 
-        // And by our equality contract:
         assertEquals(book, restored);
     }
 
