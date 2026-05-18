@@ -100,7 +100,7 @@ public class Book {
     /**
      * Checks out a book (decrements number of copies available in the library)
      * 
-     * @throws RuntimeException if no copies are available to check out.
+     * @throws IllegalStateException if no copies are available to check out.
      */
     public void checkout() {
         if (availableCopies <= 0) {
@@ -112,7 +112,7 @@ public class Book {
     /**
      * Checks in a book into the library.
      * 
-     * @throws RuntimeException if no copies have been checked out.
+     * @throws IllegalStateException if no copies have been checked out.
      */
     public void checkin() {
         if (availableCopies >= numberOfCopies) {

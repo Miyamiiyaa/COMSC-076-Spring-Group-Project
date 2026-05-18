@@ -41,11 +41,11 @@ public class Library {
         }
     }
 
-   /**
- * Removes a book from the library using its ISBN.
- *
- * @param isbn the ISBN of the book to remove
- */
+    /**
+     * Removes a book from the library using its ISBN.
+     *
+     * @param isbn the ISBN of the book to remove
+     */
     public void removeBook(String isbn) {
         if (!books.containsKey(isbn)) {
             throw new java.util.NoSuchElementException(
@@ -73,12 +73,31 @@ public class Library {
     }
 
     /**
-     * Finds this book in the library. Throws appropriate exception if the book
-     * doesnt exist.
+     * Finds this book in the library. O(n) time complexity because it must
+     * traverse the entire library.
+     * 
+     * 
+     * @param title the title of the book to find (not null)
+     * @param author the author of the book to find (not null)
+     * @return the book if both the title and author match
+     * @throws IllegalArgumentException if title or author is null
+     * @throws java.util.NoSuchElementException if the book doesnt exist
      */
     public Book findByTitleAndAuthor(String title, String author) {
-        // TODO: Implement this method.
-        throw new UnsupportedOperationException("not implemented");
+        if (title == null || author == null) {
+            throw new IllegalArgumentException(
+                    "TItle and Author must not be null");
+        }
+
+        for (Book book : books.values()) {
+            if (book.getTitle().equals(title)
+                    && book.getAuthor().equals(author)) {
+                return book;
+            }
+        }
+
+        throw new java.util.NoSuchElementException("Book with title "
+                + title + " and author " + author + " does not exist.");
     }
 
     /**
@@ -103,11 +122,10 @@ public class Library {
 
             writer.close();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(
-                    "Could not save file: " + filename);
+            throw new RuntimeException("Could not save file: " + filename);
         }
     }
-    
+
     /**
      * Loads the contents of this library from the given file. All existing data
      * in this library is cleared before loading from the file.
@@ -126,8 +144,7 @@ public class Library {
 
             scanner.close();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(
-                    "Could not load file: " + filename);
+            throw new RuntimeException("Could not load file: " + filename);
         }
     }
 
@@ -152,38 +169,30 @@ public class Library {
                     if (parts.length != 6) {
                         System.out.println(
                                 "Error: add format is add title author "
-                                + "isbn publicationYear numberOfCopies");
+                                        + "isbn publicationYear numberOfCopies");
                     } else {
                         String title = parts[1];
                         String author = parts[2];
                         String isbn = parts[3];
 
-                        int publicationYear =
-                                Integer.parseInt(parts[4]);
+                        int publicationYear = Integer.parseInt(parts[4]);
 
-                        int numberOfCopies =
-                                Integer.parseInt(parts[5]);
+                        int numberOfCopies = Integer.parseInt(parts[5]);
 
-                        Book book = new Book(
-                                title,
-                                author,
-                                isbn,
-                                publicationYear,
-                                numberOfCopies);
+                        Book book = new Book(title, author, isbn,
+                                publicationYear, numberOfCopies);
 
                         library.addBook(book);
 
-                        System.out.println(
-                                "Book added successfully.");
+                        System.out.println("Book added successfully.");
                     }
 
                 } catch (NumberFormatException e) {
-                    System.out.println(
-                            "Error: publication year and number "
-                            + "of copies must be numbers.");
+                    System.out
+                            .println("Error: publication year and number "
+                                    + "of copies must be numbers.");
                 } catch (RuntimeException e) {
-                    System.out.println(
-                            "Error: " + e.getMessage());
+                    System.out.println("Error: " + e.getMessage());
                 }
 
             } else if (line.startsWith("remove")) {
@@ -202,13 +211,11 @@ public class Library {
 
                         library.removeBook(isbn);
 
-                        System.out.println(
-                                "Book removed successfully.");
+                        System.out.println("Book removed successfully.");
                     }
 
                 } catch (RuntimeException e) {
-                    System.out.println(
-                            "Error: " + e.getMessage());
+                    System.out.println("Error: " + e.getMessage());
                 }
 
             } else if (line.startsWith("checkout")) {
