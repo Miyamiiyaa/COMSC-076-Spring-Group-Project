@@ -103,8 +103,10 @@ public class Book {
      * @throws RuntimeException if no copies are available to check out.
      */
     public void checkout() {
-        // TODO: Implement this method.
-        throw new UnsupportedOperationException("Not implemented");
+        if (availableCopies <= 0) {
+            throw new RuntimeException(
+                    "No copies available to checkout");
+        }
     }
 
     /**
@@ -113,8 +115,12 @@ public class Book {
      * @throws RuntimeException if no copies have been checked out.
      */
     public void checkin() {
-        // TODO: Implement this method.
-        throw new UnsupportedOperationException("Not implemented");
+        if (availableCopies >= numberOfCopies) {
+            throw new RuntimeException(
+                    "No checked out copies to return");
+        }
+        
+        availableCopies++;
     }
 
     @Override
