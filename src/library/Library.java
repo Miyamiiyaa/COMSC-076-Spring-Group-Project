@@ -2,6 +2,9 @@ package library;
 
 import java.util.HashMap;
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 
 /**
  * A library management class. Has a simple shell that users can interact with
@@ -91,8 +94,43 @@ public class Library {
      * Saves the contents of this library to the given file.
      */
     public void save(String filename) {
-        // TODO: Implement this method.
-        throw new UnsupportedOperationException("not implemented");
+        try (PrintWriter writer = new PrintWriter(filename)) {
+
+            writer.println("[");
+            int count = 0;
+            int size = books.size();
+
+            for (Book book : books.values()) {
+                writer.println("  {");
+                writer.println(
+                        "    \"title\": \"" + book.getTitle() + "\",");
+                writer.println(
+                        "    \"author\": \"" + book.getAuthor() + "\",");
+                writer.println(
+                        "    \"isbn\": \"" + book.getISBN() + "\",");
+                writer.println("    \"publicationYear\": "
+                        + book.getPublicationYear() + ",");
+                writer.println("    \"numberOfCopies\": "
+                        + book.getNumberOfCopies() + ",");
+                writer.println("    \"availableCopies\": "
+                        + book.getAvailableCopies());
+                writer.print("  }");
+
+                if (++count < size) {
+                    writer.println(",");
+                } else {
+                    writer.println();
+                }
+            }
+
+            writer.println("]");
+
+            System.out.println("Saved to: "
+                    + new java.io.File(filename).getAbsolutePath());
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Could not save file: " + filename);
+        }
     }
 
     /**
@@ -100,8 +138,30 @@ public class Library {
      * in this library is cleared before loading from the file.
      */
     public void load(String filename) {
-        // TODO: Implement this method.
-        throw new UnsupportedOperationException("not implemented");
+        try {
+            Scanner scanner = new Scanner(new File(filename));
+
+            books.clear();
+
+            while (scanner.hasNext()) {
+                String title = scanner.next();
+                String author = scanner.next();
+                String isbn = scanner.next();
+                int publicationYear = scanner.nextInt();
+                int numberOfCopies = scanner.nextInt();
+                int availableCopies = scanner.nextInt();
+
+                Book book = new Book(title, author, isbn, publicationYear,
+                        numberOfCopies);
+                book.setAvailableCopies(availableCopies);
+
+                books.put(isbn, book);
+            }
+
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("Could not load file: " + filename);
+        }
     }
 
     public static void main(String[] args) {
@@ -225,11 +285,27 @@ public class Library {
                 // save <filename>
                 // e.g. save LbraryFile.dat
 
+                String[] parts = line.split(" ");
+                String filename = parts[1];
+
+                if (!filename.endsWith(".json")) {
+                    filename += ".json";
+                }
+                library.save(filename);
+
             } else if (line.startsWith("load")) {
                 // TODO: Implement this case.
                 // Format of the line is:
                 // load <filename>
                 // e.g. load LibraryFile.dat
+                String[] parts = line.split(" ");
+                String filename = parts[1];
+
+                if (!filename.endsWith(".json")) {
+                    filename += ".json";
+                }
+
+                library.load(filename);
 
             } else if (line.startsWith("exit")) {
                 break;
