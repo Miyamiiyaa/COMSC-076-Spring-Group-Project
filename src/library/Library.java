@@ -20,8 +20,7 @@ public class Library {
      * @return the number of books (not number of copies) in the library.
      */
     public int getNumberOfBooks() {
-        return books.size(); // returns the number of books, excluding multiple
-                             // copies of each book.
+        return books.size();
     }
 
     /**
@@ -32,11 +31,9 @@ public class Library {
         String isbn = book.getISBN();
 
         if (books.containsKey(isbn)) {
-            // book already exists, increment the number of copies
             Book existingBook = books.get(isbn);
             existingBook.addCopies(book.getNumberOfCopies());
         } else {
-            // book doesnt exist in the library. Add it to the library.
             books.put(isbn, book);
         }
     }
@@ -56,7 +53,6 @@ public class Library {
     /**
      * Checks out one copy of the book with the given ISBN.
      *
-     * @param isbn the ISBN of the book to check out
      * @throws IllegalArgumentException if isbn is null
      * @throws java.util.NoSuchElementException if no book has that ISBN
      * @throws IllegalStateException if no copies are available
@@ -90,7 +86,7 @@ public class Library {
     public Book findByTitleAndAuthor(String title, String author) {
         if (title == null || author == null) {
             throw new IllegalArgumentException(
-                    "TItle and Author must not be null");
+                    "Title and Author must not be null");
         }
 
         for (Book book : books.values()) {
@@ -170,15 +166,9 @@ public class Library {
 
         while (keepRunning) {
             System.out.print("library> ");
-            String line = scanner.nextLine();
+            String line = scanner.nextLine().trim();
 
             if (line.startsWith("add")) {
-                // The format of the line is
-                // add title author isbn publicationYear numberOfCopies
-                // e.g. add Star_Trek Gene_Roddenberry ISBN-1234 1965 10
-                // NOTE: If a book already exists in the library, then the
-                // number of copies should be incremented by this amount.
-
                 try {
                     String[] parts = line.split("\\s+");
 
@@ -211,10 +201,6 @@ public class Library {
                 }
 
             } else if (line.startsWith("remove")) {
-                // Format of the line is
-                // remove <isbn>
-                // e.g. remove ISBN-1234
-
                 try {
                     String[] parts = line.split("\\s+");
 
@@ -234,72 +220,151 @@ public class Library {
                 }
 
             } else if (line.startsWith("checkout")) {
-                // TODO: Implement this case.
-                // The format of the line is
-                // checkout isbn
-                // e.g. checkout ISBN-1234
-                // NOTE: If the book doesnt exist in the library, then the code
-                // should print an error.
+                try {
+                    String[] parts = line.split("\\s+");
+
+                    if (parts.length != 2) {
+                        System.out.println(
+                                "Error: checkout format is checkout isbn");
+                    } else {
+                        String isbn = parts[1];
+
+                        library.checkout(isbn);
+
+                        System.out.println("Book checked out successfully.");
+                    }
+
+                } catch (RuntimeException e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
 
             } else if (line.startsWith("findByTitleAndAuthor")) {
-                // TODO: Implement this case.
-                // The format of the line is
-                // findByTitleAndAuthor <title> <author>
-                // e.g. findByTitleAndAuthor Star_Trek Gene_Roddenberry
-                // NOTE: If the book doesnt exist in the library, then the code
-                // should print an error.
-                // If the book exists in the library, this code should print the
-                // ISBN, number of copies in the library, and the number of
-                // copies available
+                try {
+                    String[] parts = line.split("\\s+");
+
+                    if (parts.length != 3) {
+                        System.out.println(
+                                "Error: findByTitleAndAuthor format is "
+                                        + "findByTitleAndAuthor title author");
+                    } else {
+                        String title = parts[1];
+                        String author = parts[2];
+
+                        Book book = library.findByTitleAndAuthor(title,
+                                author);
+
+                        System.out.println("ISBN: " + book.getISBN());
+                        System.out.println("Total copies: "
+                                + book.getNumberOfCopies());
+                        System.out.println("Available copies: "
+                                + book.getAvailableCopies());
+                    }
+
+                } catch (RuntimeException e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
 
             } else if (line.startsWith("return")) {
-                // TODO: Implement this case.
-                // Format of the line is
-                // return <isbn>
-                // e.g. return ISBN-1234
-                // NOTE: If the book was never checked out, this code should
-                // print an error.
+                try {
+                    String[] parts = line.split("\\s+");
+
+                    if (parts.length != 2) {
+                        System.out.println(
+                                "Error: return format is return isbn");
+                    } else {
+                        String isbn = parts[1];
+
+                        library.returnBook(isbn);
+
+                        System.out.println("Book returned successfully.");
+                    }
+
+                } catch (RuntimeException e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
 
             } else if (line.startsWith("list")) {
-                // TODO: Implement this case.
-                // Format of the line is
-                // list <isbn>
-                // e.g. list ISBN-1234
-                // NOTE: This code should print out the number of copies in the
-                // library and the number of copies available.
+                try {
+                    String[] parts = line.split("\\s+");
+
+                    if (parts.length != 2) {
+                        System.out.println(
+                                "Error: list format is list isbn");
+                    } else {
+                        String isbn = parts[1];
+
+                        Book book = library.findByISBN(isbn);
+
+                        System.out.println("Title: " + book.getTitle());
+                        System.out.println("Author: " + book.getAuthor());
+                        System.out.println("ISBN: " + book.getISBN());
+                        System.out.println("Total copies: "
+                                + book.getNumberOfCopies());
+                        System.out.println("Available copies: "
+                                + book.getAvailableCopies());
+                    }
+
+                } catch (RuntimeException e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
 
             } else if (line.startsWith("save")) {
-                // TODO: Implement this case.
-                // Format of the line is
-                // save <filename>
-                // e.g. save LibraryFile.dat
+                try {
+                    String[] parts = line.split("\\s+");
 
-                String[] parts = line.split("\\s+");
-                String filename = parts[1];
+                    if (parts.length != 2) {
+                        System.out.println(
+                                "Error: save format is save filename");
+                    } else {
+                        String filename = parts[1];
 
-                if (!filename.endsWith(".json")) {
-                    filename += ".json";
+                        if (!filename.endsWith(".json")) {
+                            filename += ".json";
+                        }
+
+                        library.save(filename);
+
+                        System.out.println("Library saved successfully.");
+                    }
+
+                } catch (RuntimeException e) {
+                    System.out.println("Error: " + e.getMessage());
                 }
-                library.save(filename);
 
             } else if (line.startsWith("load")) {
-                // TODO: Implement this case.
-                // Format of the line is:
-                // load <filename>
-                // e.g. load LibraryFile.dat
+                try {
+                    String[] parts = line.split("\\s+");
 
-                String[] parts = line.split("\\s+");
-                String filename = parts[1];
+                    if (parts.length != 2) {
+                        System.out.println(
+                                "Error: load format is load filename");
+                    } else {
+                        String filename = parts[1];
 
-                if (!filename.endsWith(".json")) {
-                    filename += ".json";
+                        if (!filename.endsWith(".json")) {
+                            filename += ".json";
+                        }
+
+                        library.load(filename);
+
+                        System.out.println("Library loaded successfully.");
+                    }
+
+                } catch (RuntimeException e) {
+                    System.out.println("Error: " + e.getMessage());
                 }
-
-                library.load(filename);
 
             } else if (line.startsWith("exit")) {
                 keepRunning = false;
+
+            } else if (line.length() == 0) {
+                System.out.println("Error: please enter a command.");
+
+            } else {
+                System.out.println("Error: unknown command");
             }
         }
+
+        scanner.close();
     }
 }
