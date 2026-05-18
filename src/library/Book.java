@@ -165,16 +165,6 @@ public class Book {
     }
 
     /**
-     * Creates a book instance from a JSON string.
-     * 
-     * @param json the JSON string representing the book
-     * @return a book instance
-     */
-    public static Book fromSerialized(String json) {
-        throw new UnsupportedOperationException("Not implemented");
-    }
-
-    /**
      * Returns a JSON string representation of this book.
      * 
      * @return a JSON string representation of the book /** Creates a Book from
