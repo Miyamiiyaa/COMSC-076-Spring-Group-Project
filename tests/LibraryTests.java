@@ -298,10 +298,12 @@ public class LibraryTests {
         library.addBook(book);
         assertThrows(NoSuchElementException.class,
                 () -> library.findByTitleAndAuthor(TITLE, "Wrong_Author"),
-                "require both title and author to match in findByTitleAndAuthor");
+                "require both title and author"
+                        + " to match in findByTitleAndAuthor");
         assertThrows(NoSuchElementException.class,
                 () -> library.findByTitleAndAuthor("Wrong_Title", AUTHOR),
-                "require both title and author to match in findByTitleAndAuthor");
+                "require both title and author"
+                        + " to match in findByTitleAndAuthor");
     }
 
     @Test @DisplayName("Test finding with null title or author throws")
@@ -359,7 +361,8 @@ public class LibraryTests {
                 "pre-existing books should be cleared by load");
     }
 
-    @Test @DisplayName("Save then load on empty library produces empty library")
+    @Test @DisplayName("Save then load on empty"
+            + " library produces empty library")
     void testSaveLoadEmptyLibrary(@TempDir Path tempDir) {
         String filename = tempDir.resolve("testlibrary.json").toString();
         library.save(filename);
