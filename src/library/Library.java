@@ -42,31 +42,38 @@ public class Library {
     }
 
     /**
-     * Removes a book from the library using its ISBN.
+     * Removes the book with the given ISBN from the library.
      *
      * @param isbn the ISBN of the book to remove
+     * @throws IllegalArgumentException if isbn is null
+     * @throws java.util.NoSuchElementException if no book has that ISBN
      */
     public void removeBook(String isbn) {
-        findByISBN(isbn); // validates null + existence
+        findByISBN(isbn);
         books.remove(isbn);
     }
 
     /**
-     * Checks out the given book from the library.
-     * 
-     * @throws IllegalStateException if the book is not available in the library
+     * Checks out one copy of the book with the given ISBN.
+     *
+     * @throws IllegalArgumentException if isbn is null
+     * @throws java.util.NoSuchElementException if no book has that ISBN
+     * @throws IllegalStateException if no copies are available
      */
     public void checkout(String isbn) {
-        // TODO: Implement this method.
-        throw new UnsupportedOperationException("not implemented");
+        findByISBN(isbn).checkout();
     }
 
     /**
-     * Returns a book to the library
+     * Returns one copy of the book with the given ISBN.
+     *
+     * @param isbn the ISBN of the book to return
+     * @throws IllegalArgumentException if isbn is null
+     * @throws java.util.NoSuchElementException if no book has that ISBN
+     * @throws IllegalStateException if no copies are currently checked out
      */
-    public void returnBook(String isnb) {
-        // TODO: Implement this method.
-        throw new UnsupportedOperationException("not implemented");
+    public void returnBook(String isbn) {
+        findByISBN(isbn).checkin();
     }
 
     /**
@@ -98,7 +105,7 @@ public class Library {
     }
 
     /**
-     * Finds a book in the library by its ISBN.
+     * Finds a book returnBookin the library by its ISBN.
      *
      * @param isbn the ISBN to search for (must not be null)
      * @return the Book with the given ISBN
