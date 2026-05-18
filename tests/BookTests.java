@@ -1,6 +1,7 @@
 
 /**
- * This is a set of Unit tests that cover adding, deleting, check in/out, and searching of books.
+ * This is a set of Unit tests that cover adding, deleting, check in/out, 
+ * and searching of books.
  * 
  * Used Resources:
  * https://docs.junit.org/6.0.3/overview.html
@@ -97,7 +98,8 @@ public class BookTests {
         assertEquals(0, zero.getNumberOfCopies(),
                 "number of copies should be set to 0");
         assertEquals(0, zero.getAvailableCopies(),
-                "available copies should be initialized to total copies, even if 0");
+                "available copies should be"
+                        + "initialized to total copies, even if 0");
     }
 
     /* Do we test ISBN format? */
@@ -266,10 +268,12 @@ public class BookTests {
         assertTrue(s.contains(String.valueOf(COPIES)),
                 "toString should include the number of copies");
         assertFalse(s.matches("library\\.Book@[0-9a-f]+"),
-                "toString must be overridden, not inherited from Object");
+                "toString must be overridden,"
+                        + " not inherited from Object");
     }
 
-    @Test @DisplayName("Test toSerialized produces non-empty JSON with all fields")
+    @Test @DisplayName("Test toSerialized produces"
+            + "non-empty JSON with all fields")
     void testToSerialized() {
         String json = book.toSerialized();
         assertNotNull(json);
@@ -330,7 +334,8 @@ public class BookTests {
                 "JSON missing required fields should be rejected");
     }
 
-    @Test @DisplayName("Test serdes must handle escaping special characters")
+    @Test @DisplayName("Test serdes must handle"
+            + " escaping special characters")
     void testSerializationSpecialChars() {
         Book tricky = new Book("Title with \"quotes\" and \\ backslash",
                 "Author, with commas", "ISBN-special", YEAR, COPIES);
