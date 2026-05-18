@@ -42,40 +42,45 @@ public class Library {
     }
 
     /**
-     * Removes a book from the library using its ISBN.
+     * Removes the book with the given ISBN from the library.
      *
      * @param isbn the ISBN of the book to remove
+     * @throws IllegalArgumentException if isbn is null
+     * @throws java.util.NoSuchElementException if no book has that ISBN
      */
     public void removeBook(String isbn) {
-        if (!books.containsKey(isbn)) {
-            throw new java.util.NoSuchElementException(
-                    "Book with ISBN " + isbn + " does not exist.");
-        }
-
+        findByISBN(isbn);
         books.remove(isbn);
     }
 
     /**
-     * Checks out the given book from the library. Throw the appropriate
-     * exception if book doesnt exist or there are no more copies available.
+     * Checks out one copy of the book with the given ISBN.
+     *
+     * @param isbn the ISBN of the book to check out
+     * @throws IllegalArgumentException if isbn is null
+     * @throws java.util.NoSuchElementException if no book has that ISBN
+     * @throws IllegalStateException if no copies are available
      */
     public void checkout(String isbn) {
-        // TODO: Implement this method.
-        throw new UnsupportedOperationException("not implemented");
+        findByISBN(isbn).checkout();
     }
 
     /**
-     * Returns a book to the library
+     * Returns one copy of the book with the given ISBN.
+     *
+     * @param isbn the ISBN of the book to return
+     * @throws IllegalArgumentException if isbn is null
+     * @throws java.util.NoSuchElementException if no book has that ISBN
+     * @throws IllegalStateException if no copies are currently checked out
      */
-    public void returnBook(String isnb) {
-        // TODO: Implement this method.
-        throw new UnsupportedOperationException("not implemented");
+    public void returnBook(String isbn) {
+        findByISBN(isbn).checkin();
     }
 
     /**
      * Finds this book in the library. O(n) time complexity because it must
      * traverse the entire library.
-     * 
+     *
      * @param title the title of the book to find (not null)
      * @param author the author of the book to find (not null)
      * @return the book if both the title and author match
@@ -100,12 +105,22 @@ public class Library {
     }
 
     /**
-     * Finds this book in the library. Throws appropriate exception if the book
-     * doesnt exist.
+     * Finds a book in the library by its ISBN.
+     *
+     * @param isbn the ISBN to search for (must not be null)
+     * @return the Book with the given ISBN
+     * @throws IllegalArgumentException if isbn is null
+     * @throws java.util.NoSuchElementException if no book has that ISBN
      */
     public Book findByISBN(String isbn) {
-        // TODO: Implement this method.
-        throw new UnsupportedOperationException("not implemented");
+        if (isbn == null) {
+            throw new IllegalArgumentException("isbn must not be null");
+        }
+        if (!books.containsKey(isbn)) {
+            throw new java.util.NoSuchElementException(
+                    "Book with ISBN " + isbn + " does not exist.");
+        }
+        return books.get(isbn);
     }
 
     /**
@@ -156,7 +171,7 @@ public class Library {
         while (keepRunning) {
             System.out.print("library> ");
             String line = scanner.nextLine();
-            // TODO: Implement code
+
             if (line.startsWith("add")) {
                 // The format of the line is
                 // add title author isbn publicationYear numberOfCopies
@@ -177,7 +192,6 @@ public class Library {
                         String isbn = parts[3];
 
                         int publicationYear = Integer.parseInt(parts[4]);
-
                         int numberOfCopies = Integer.parseInt(parts[5]);
 
                         Book book = new Book(title, author, isbn,
@@ -236,7 +250,7 @@ public class Library {
                 // should print an error.
                 // If the book exists in the library, this code should print the
                 // ISBN, number of copies in the library, and the number of
-                // copies availabvle
+                // copies available
 
             } else if (line.startsWith("return")) {
                 // TODO: Implement this case.
@@ -249,7 +263,7 @@ public class Library {
             } else if (line.startsWith("list")) {
                 // TODO: Implement this case.
                 // Format of the line is
-                // list <isnb>
+                // list <isbn>
                 // e.g. list ISBN-1234
                 // NOTE: This code should print out the number of copies in the
                 // library and the number of copies available.
@@ -258,9 +272,9 @@ public class Library {
                 // TODO: Implement this case.
                 // Format of the line is
                 // save <filename>
-                // e.g. save LbraryFile.dat
+                // e.g. save LibraryFile.dat
 
-                String[] parts = line.split(" ");
+                String[] parts = line.split("\\s+");
                 String filename = parts[1];
 
                 if (!filename.endsWith(".json")) {
@@ -273,7 +287,8 @@ public class Library {
                 // Format of the line is:
                 // load <filename>
                 // e.g. load LibraryFile.dat
-                String[] parts = line.split(" ");
+
+                String[] parts = line.split("\\s+");
                 String filename = parts[1];
 
                 if (!filename.endsWith(".json")) {
