@@ -137,7 +137,7 @@ public class Book {
     /**
      * Checks if this book is equal to another object.
      * 
-     * @param obj the object to compare with
+     * @param that the object to compare with
      * @return true if the objects are equal, false otherwise
      */
     @Override
@@ -177,9 +177,8 @@ public class Book {
     /**
      * Returns a JSON string representation of this book.
      * 
-     * @return a JSON string representation of the book
-    /**
-     * Creates a Book from serialized data
+     * @return a JSON string representation of the book /** Creates a Book from
+     * serialized data
      * 
      * @param line serialized book data
      * @return reconstructed Book object
@@ -189,44 +188,37 @@ public class Book {
             throw new IllegalArgumentException(
                     "Serialized data cannot be null");
         }
-        
-        String [] parts = line.split("\\|");
-        
+
+        String[] parts = line.split("\\|");
+
         if (parts.length != 6) {
             throw new IllegalArgumentException(
                     "Invalid serialized book format");
         }
-        
+
         String title = parts[0];
         String author = parts[1];
         String isbn = parts[2];
-        
+
         int publicationYear = Integer.parseInt(parts[3]);
         int numberOfCopies = Integer.parseInt(parts[4]);
         int availableCopies = Integer.parseInt(parts[5]);
-        
-        Book book = new Book(
-                title,
-                author,
-                isbn,
-                publicationYear,
+
+        Book book = new Book(title, author, isbn, publicationYear,
                 numberOfCopies);
-        
+
         book.setAvailableCopies(availableCopies);
-        
+
         return book;
     }
+
     /**
      * Serializes this book into a string
      * 
      * @return serialized representation of this book
      */
     public String toSerialized() {
-        return title + "|"
-                + author + "|"
-                + isbn + "|"
-                + publicationYear + "|"
-                + numberOfCopies + "|"
-                + availableCopies;
+        return title + "|" + author + "|" + isbn + "|" + publicationYear
+                + "|" + numberOfCopies + "|" + availableCopies;
     }
 }
