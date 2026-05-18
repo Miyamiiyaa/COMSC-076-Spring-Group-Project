@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Encapusulates information about a book.
  * 
- * @author Balaji Srinivasan
+ * @author our names
  */
 public class Book {
     String title;
@@ -125,6 +125,10 @@ public class Book {
 
     /**
      * Sets the number of available copies. Just used for testing.
+     * 
+     * @throws IllegalArgumentException if numCopies is negative or greater than
+     * total number of copies.
+     * @param numCopies the number of available copies to set
      */
     public void setAvailableCopies(int numCopies) {
         if (numCopies < 0 || numCopies > numberOfCopies) {
@@ -179,11 +183,22 @@ public class Book {
         availableCopies++;
     }
 
+    /**
+     * Returns the hash code for this book.
+     * 
+     * @return the hash code
+     */
     @Override
     public int hashCode() {
         return Objects.hash(title, author, isbn);
     }
 
+    /**
+     * Checks if this book is equal to another object.
+     * 
+     * @param that the object to compare with
+     * @return true if the objects are equal, false otherwise
+     */
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -199,10 +214,9 @@ public class Book {
     }
 
     /**
-     * Returns a string representation of this book, including all its
-     * properties.
+     * Returns a string representation of this book.
      * 
-     * @returns a string representation of this book
+     * @return a string representation of the book
      */
     @Override
     public String toString() {
@@ -213,7 +227,10 @@ public class Book {
     }
 
     /**
-     * Creates a Book from serialized data
+     * Returns a JSON string representation of this book.
+     * 
+     * @return a JSON string representation of the book /** Creates a Book from
+     * serialized data
      * 
      * @param line serialized book data
      * @return reconstructed Book object

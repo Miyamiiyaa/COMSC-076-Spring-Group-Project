@@ -27,6 +27,8 @@ public class Library {
     /**
      * Adds a book to the library. If the library already has this book then it
      * adds the number of copies the library has.
+     * 
+     * @param book the book to add
      */
     public void addBook(Book book) {
         String isbn = book.getISBN();
@@ -125,6 +127,8 @@ public class Library {
 
     /**
      * Saves the contents of this library to the given file.
+     * 
+     * @param filename the name of the file
      */
     public void save(String filename) {
         try {
@@ -143,6 +147,8 @@ public class Library {
     /**
      * Loads the contents of this library from the given file. All existing data
      * in this library is cleared before loading from the file.
+     * 
+     * @param filename the name of the file
      */
     public void load(String filename) {
         try {
@@ -162,6 +168,11 @@ public class Library {
         }
     }
 
+    /**
+     * The main method of the program.
+     * 
+     * @param args
+     */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Library library = new Library();
