@@ -107,45 +107,20 @@ public class Library {
      * @param filename the name of the file
      */
     public void save(String filename) {
-        try (PrintWriter writer = new PrintWriter(filename)) {
-
-            writer.println("[");
-            int count = 0;
-            int size = books.size();
+        try {
+            PrintWriter writer = new PrintWriter(filename);
 
             for (Book book : books.values()) {
-                writer.println("  {");
-                writer.println(
-                        "    \"title\": \"" + book.getTitle() + "\",");
-                writer.println(
-                        "    \"author\": \"" + book.getAuthor() + "\",");
-                writer.println(
-                        "    \"isbn\": \"" + book.getISBN() + "\",");
-                writer.println("    \"publicationYear\": "
-                        + book.getPublicationYear() + ",");
-                writer.println("    \"numberOfCopies\": "
-                        + book.getNumberOfCopies() + ",");
-                writer.println("    \"availableCopies\": "
-                        + book.getAvailableCopies());
-                writer.print("  }");
-
-                if (++count < size) {
-                    writer.println(",");
-                } else {
-                    writer.println();
-                }
+                writer.println(book.toSerialized());
             }
 
-            writer.println("]");
-
-            System.out.println("Saved to: "
-                    + new java.io.File(filename).getAbsolutePath());
-
+            writer.close();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Could not save file: " + filename);
+            throw new RuntimeException(
+                    "Could not save file: " + filename);
         }
     }
-
+    
     /**
      * Loads the contents of this library from the given file. All existing data
      * in this library is cleared before loading from the file.
@@ -158,24 +133,16 @@ public class Library {
 
             books.clear();
 
-            while (scanner.hasNext()) {
-                String title = scanner.next();
-                String author = scanner.next();
-                String isbn = scanner.next();
-                int publicationYear = scanner.nextInt();
-                int numberOfCopies = scanner.nextInt();
-                int availableCopies = scanner.nextInt();
-
-                Book book = new Book(title, author, isbn, publicationYear,
-                        numberOfCopies);
-                book.setAvailableCopies(availableCopies);
-
-                books.put(isbn, book);
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                Book book = Book.fromSerialized(line);
+                books.put(book.getISBN(), book);
             }
 
             scanner.close();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Could not load file: " + filename);
+            throw new RuntimeException(
+                    "Could not load file: " + filename);
         }
     }
 
