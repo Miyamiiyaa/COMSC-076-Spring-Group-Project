@@ -44,61 +44,85 @@ public class Library {
     }
 
     /**
-     * Removes a book from the library using its ISBN.
+     * Removes the book with the given ISBN from the library.
      *
      * @param isbn the ISBN of the book to remove
+     * @throws IllegalArgumentException if isbn is null
+     * @throws java.util.NoSuchElementException if no book has that ISBN
      */
     public void removeBook(String isbn) {
-        if (!books.containsKey(isbn)) {
-            throw new java.util.NoSuchElementException(
-                    "Book with ISBN " + isbn + " does not exist.");
-        }
-
+        findByISBN(isbn);
         books.remove(isbn);
     }
 
     /**
-     * Checks out the given book from the library. Throw the appropriate
-     * exception if book doesnt exist or there are no more copies available.
-     * 
-     * @Pparam isbn the ISBN of the book to check out
+     * Checks out one copy of the book with the given ISBN.
+     *
+     * @throws IllegalArgumentException if isbn is null
+     * @throws java.util.NoSuchElementException if no book has that ISBN
+     * @throws IllegalStateException if no copies are available
      */
     public void checkout(String isbn) {
-        // TODO: Implement this method.
-        throw new UnsupportedOperationException("not implemented");
+        findByISBN(isbn).checkout();
     }
 
     /**
-     * Returns a book to the library
-     * 
+     * Returns one copy of the book with the given ISBN.
+     *
      * @param isbn the ISBN of the book to return
+     * @throws IllegalArgumentException if isbn is null
+     * @throws java.util.NoSuchElementException if no book has that ISBN
+     * @throws IllegalStateException if no copies are currently checked out
      */
-    public void returnBook(String isnb) {
-        // TODO: Implement this method.
-        throw new UnsupportedOperationException("not implemented");
+    public void returnBook(String isbn) {
+        findByISBN(isbn).checkin();
     }
 
     /**
-     * Finds this book in the library. Throws appropriate exception if the book
-     * doesnt exist.
+     * Finds this book in the library. O(n) time complexity because it must
+     * traverse the entire library.
      * 
-     * @param title the title of the book to find
-     * @param author the author of the book to find
+     * 
+     * @param title the title of the book to find (not null)
+     * @param author the author of the book to find (not null)
+     * @return the book if both the title and author match
+     * @throws IllegalArgumentException if title or author is null
+     * @throws java.util.NoSuchElementException if the book doesnt exist
      */
     public Book findByTitleAndAuthor(String title, String author) {
-        // TODO: Implement this method.
-        throw new UnsupportedOperationException("not implemented");
+        if (title == null || author == null) {
+            throw new IllegalArgumentException(
+                    "TItle and Author must not be null");
+        }
+
+        for (Book book : books.values()) {
+            if (book.getTitle().equals(title)
+                    && book.getAuthor().equals(author)) {
+                return book;
+            }
+        }
+
+        throw new java.util.NoSuchElementException("Book with title "
+                + title + " and author " + author + " does not exist.");
     }
 
     /**
-     * Finds this book in the library. Throws appropriate exception if the book
-     * doesnt exist.
-     * 
-     * @param isbn the ISBN of the book to find
+     * Finds a book returnBookin the library by its ISBN.
+     *
+     * @param isbn the ISBN to search for (must not be null)
+     * @return the Book with the given ISBN
+     * @throws IllegalArgumentException if isbn is null
+     * @throws java.util.NoSuchElementException if no book has that ISBN
      */
     public Book findByISBN(String isbn) {
-        // TODO: Implement this method.
-        throw new UnsupportedOperationException("not implemented");
+        if (isbn == null) {
+            throw new IllegalArgumentException("isbn must not be null");
+        }
+        if (!books.containsKey(isbn)) {
+            throw new java.util.NoSuchElementException(
+                    "Book with ISBN " + isbn + " does not exist.");
+        }
+        return books.get(isbn);
     }
 
     /**
@@ -116,11 +140,10 @@ public class Library {
 
             writer.close();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(
-                    "Could not save file: " + filename);
+            throw new RuntimeException("Could not save file: " + filename);
         }
     }
-    
+
     /**
      * Loads the contents of this library from the given file. All existing data
      * in this library is cleared before loading from the file.
@@ -141,8 +164,7 @@ public class Library {
 
             scanner.close();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(
-                    "Could not load file: " + filename);
+            throw new RuntimeException("Could not load file: " + filename);
         }
     }
 
