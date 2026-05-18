@@ -47,17 +47,14 @@ public class Library {
      * @param isbn the ISBN of the book to remove
      */
     public void removeBook(String isbn) {
-        if (!books.containsKey(isbn)) {
-            throw new java.util.NoSuchElementException(
-                    "Book with ISBN " + isbn + " does not exist.");
-        }
-
+        findByISBN(isbn); // validates null + existence
         books.remove(isbn);
     }
 
     /**
-     * Checks out the given book from the library. Throw the appropriate
-     * exception if book doesnt exist or there are no more copies available.
+     * Checks out the given book from the library.
+     * 
+     * @throws IllegalStateException if the book is not available in the library
      */
     public void checkout(String isbn) {
         // TODO: Implement this method.
@@ -101,12 +98,22 @@ public class Library {
     }
 
     /**
-     * Finds this book in the library. Throws appropriate exception if the book
-     * doesnt exist.
+     * Finds a book in the library by its ISBN.
+     *
+     * @param isbn the ISBN to search for (must not be null)
+     * @return the Book with the given ISBN
+     * @throws IllegalArgumentException if isbn is null
+     * @throws java.util.NoSuchElementException if no book has that ISBN
      */
     public Book findByISBN(String isbn) {
-        // TODO: Implement this method.
-        throw new UnsupportedOperationException("not implemented");
+        if (isbn == null) {
+            throw new IllegalArgumentException("isbn must not be null");
+        }
+        if (!books.containsKey(isbn)) {
+            throw new java.util.NoSuchElementException(
+                    "Book with ISBN " + isbn + " does not exist.");
+        }
+        return books.get(isbn);
     }
 
     /**
