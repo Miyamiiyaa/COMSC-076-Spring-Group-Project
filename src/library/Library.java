@@ -215,7 +215,7 @@ public class Library {
                     System.out.println(
                             "Error: publication year and number "
                                     + "of copies must be numbers.");
-                } catch (RuntimeException e) {
+                } catch (Exception e) {
                     System.out.println("Error: " + e.getMessage());
                 }
 
@@ -233,7 +233,7 @@ public class Library {
                                 "Book removed successfully.");
                     }
 
-                } catch (RuntimeException e) {
+                } catch (Exception e) {
                     System.out.println("Error: " + e.getMessage());
                 }
 
@@ -252,7 +252,7 @@ public class Library {
                                 "Book checked out successfully.");
                     }
 
-                } catch (RuntimeException e) {
+                } catch (Exception e) {
                     System.out.println("Error: " + e.getMessage());
                 }
 
@@ -270,19 +270,10 @@ public class Library {
                         Book book = library.findByTitleAndAuthor(
                                 parts[1], parts[2]);
 
-                        System.out.println(
-                                "ISBN: " + book.getISBN());
-
-                        System.out.println(
-                                "Total copies: "
-                                        + book.getNumberOfCopies());
-
-                        System.out.println(
-                                "Available copies: "
-                                        + book.getAvailableCopies());
+                        System.out.println(book);
                     }
 
-                } catch (RuntimeException e) {
+                } catch (Exception e) {
                     System.out.println("Error: " + e.getMessage());
                 }
 
@@ -300,7 +291,7 @@ public class Library {
                                 "Book returned successfully.");
                     }
 
-                } catch (RuntimeException e) {
+                } catch (Exception e) {
                     System.out.println("Error: " + e.getMessage());
                 }
 
@@ -314,25 +305,10 @@ public class Library {
                     } else {
                         Book book = library.findByISBN(parts[1]);
 
-                        System.out.println(
-                                "Title: " + book.getTitle());
-
-                        System.out.println(
-                                "Author: " + book.getAuthor());
-
-                        System.out.println(
-                                "ISBN: " + book.getISBN());
-
-                        System.out.println(
-                                "Total copies: "
-                                        + book.getNumberOfCopies());
-
-                        System.out.println(
-                                "Available copies: "
-                                        + book.getAvailableCopies());
+                        System.out.println(book);
                     }
 
-                } catch (RuntimeException e) {
+                } catch (Exception e) {
                     System.out.println("Error: " + e.getMessage());
                 }
 
@@ -357,7 +333,7 @@ public class Library {
                                 "Library saved successfully.");
                     }
 
-                } catch (RuntimeException e) {
+                } catch (Exception e) {
                     System.out.println("Error: " + e.getMessage());
                 }
 
@@ -382,7 +358,7 @@ public class Library {
                                 "Library loaded successfully.");
                     }
 
-                } catch (RuntimeException e) {
+                } catch (Exception e) {
                     System.out.println("Error: " + e.getMessage());
                 }
 
