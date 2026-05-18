@@ -1,23 +1,25 @@
 package library;
 
-import java.util.HashMap;
-import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.io.UncheckedIOException;
+import java.util.HashMap;
+import java.util.Scanner;
 
 /**
  * A library management class. Has a simple shell that users can interact with
  * to add/remove/checkout/list books in the library. Also allows saving the
  * library state to a file and reloading it from the file.
+ *
+ * @author Balaji Srinivasan
  */
 public class Library {
 
-    // Using HashMap as the data structure for storing books in the library
-    HashMap<String, Book> books = new HashMap<>(); // key is ISBN of the book
+    HashMap<String, Book> books = new HashMap<>();
 
     /**
-     * @return the number of books (not number of copies) in the library.
+     * @return the number of books, not the number of copies, in the library
      */
     public int getNumberOfBooks() {
         return books.size();
@@ -26,12 +28,26 @@ public class Library {
     /**
      * Adds a book to the library. If the library already has this book then it
      * adds the number of copies the library has.
+     *
+     * @param book the book to add
+     * @throws IllegalArgumentException if book is null or the ISBN already
+     *         belongs to a different book
      */
     public void addBook(Book book) {
+        if (book == null) {
+            throw new IllegalArgumentException("Book must not be null");
+        }
+
         String isbn = book.getISBN();
 
         if (books.containsKey(isbn)) {
             Book existingBook = books.get(isbn);
+
+            if (!existingBook.equals(book)) {
+                throw new IllegalArgumentException(
+                        "ISBN already belongs to a different book");
+            }
+
             existingBook.addCopies(book.getNumberOfCopies());
         } else {
             books.put(isbn, book);
@@ -42,8 +58,6 @@ public class Library {
      * Removes the book with the given ISBN from the library.
      *
      * @param isbn the ISBN of the book to remove
-     * @throws IllegalArgumentException if isbn is null
-     * @throws java.util.NoSuchElementException if no book has that ISBN
      */
     public void removeBook(String isbn) {
         findByISBN(isbn);
@@ -53,9 +67,7 @@ public class Library {
     /**
      * Checks out one copy of the book with the given ISBN.
      *
-     * @throws IllegalArgumentException if isbn is null
-     * @throws java.util.NoSuchElementException if no book has that ISBN
-     * @throws IllegalStateException if no copies are available
+     * @param isbn the ISBN of the book to check out
      */
     public void checkout(String isbn) {
         findByISBN(isbn).checkout();
@@ -65,9 +77,6 @@ public class Library {
      * Returns one copy of the book with the given ISBN.
      *
      * @param isbn the ISBN of the book to return
-     * @throws IllegalArgumentException if isbn is null
-     * @throws java.util.NoSuchElementException if no book has that ISBN
-     * @throws IllegalStateException if no copies are currently checked out
      */
     public void returnBook(String isbn) {
         findByISBN(isbn).checkin();
@@ -77,11 +86,9 @@ public class Library {
      * Finds this book in the library. O(n) time complexity because it must
      * traverse the entire library.
      *
-     * @param title the title of the book to find (not null)
-     * @param author the author of the book to find (not null)
+     * @param title the title of the book to find
+     * @param author the author of the book to find
      * @return the book if both the title and author match
-     * @throws IllegalArgumentException if title or author is null
-     * @throws java.util.NoSuchElementException if the book doesnt exist
      */
     public Book findByTitleAndAuthor(String title, String author) {
         if (title == null || author == null) {
@@ -103,10 +110,8 @@ public class Library {
     /**
      * Finds a book in the library by its ISBN.
      *
-     * @param isbn the ISBN to search for (must not be null)
+     * @param isbn the ISBN to search for
      * @return the Book with the given ISBN
-     * @throws IllegalArgumentException if isbn is null
-     * @throws java.util.NoSuchElementException if no book has that ISBN
      */
     public Book findByISBN(String isbn) {
         if (isbn == null) {
@@ -116,11 +121,14 @@ public class Library {
             throw new java.util.NoSuchElementException(
                     "Book with ISBN " + isbn + " does not exist.");
         }
+
         return books.get(isbn);
     }
 
     /**
      * Saves the contents of this library to the given file.
+     *
+     * @param filename the name of the file to save to
      */
     public void save(String filename) {
         try {
@@ -132,13 +140,16 @@ public class Library {
 
             writer.close();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Could not save file: " + filename);
+            throw new UncheckedIOException(
+                    "Could not save file: " + filename, e);
         }
     }
 
     /**
      * Loads the contents of this library from the given file. All existing data
      * in this library is cleared before loading from the file.
+     *
+     * @param filename the name of the file to load from
      */
     public void load(String filename) {
         try {
@@ -154,7 +165,8 @@ public class Library {
 
             scanner.close();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Could not load file: " + filename);
+            throw new UncheckedIOException(
+                    "Could not load file: " + filename, e);
         }
     }
 
@@ -191,7 +203,6 @@ public class Library {
 
                         System.out.println("Book added successfully.");
                     }
-
                 } catch (NumberFormatException e) {
                     System.out.println(
                             "Error: publication year and number "
@@ -208,13 +219,10 @@ public class Library {
                         System.out.println(
                                 "Error: remove format is remove isbn");
                     } else {
-                        String isbn = parts[1];
-
-                        library.removeBook(isbn);
+                        library.removeBook(parts[1]);
 
                         System.out.println("Book removed successfully.");
                     }
-
                 } catch (RuntimeException e) {
                     System.out.println("Error: " + e.getMessage());
                 }
@@ -227,13 +235,10 @@ public class Library {
                         System.out.println(
                                 "Error: checkout format is checkout isbn");
                     } else {
-                        String isbn = parts[1];
-
-                        library.checkout(isbn);
+                        library.checkout(parts[1]);
 
                         System.out.println("Book checked out successfully.");
                     }
-
                 } catch (RuntimeException e) {
                     System.out.println("Error: " + e.getMessage());
                 }
@@ -247,11 +252,8 @@ public class Library {
                                 "Error: findByTitleAndAuthor format is "
                                         + "findByTitleAndAuthor title author");
                     } else {
-                        String title = parts[1];
-                        String author = parts[2];
-
-                        Book book = library.findByTitleAndAuthor(title,
-                                author);
+                        Book book = library.findByTitleAndAuthor(parts[1],
+                                parts[2]);
 
                         System.out.println("ISBN: " + book.getISBN());
                         System.out.println("Total copies: "
@@ -259,7 +261,6 @@ public class Library {
                         System.out.println("Available copies: "
                                 + book.getAvailableCopies());
                     }
-
                 } catch (RuntimeException e) {
                     System.out.println("Error: " + e.getMessage());
                 }
@@ -272,13 +273,10 @@ public class Library {
                         System.out.println(
                                 "Error: return format is return isbn");
                     } else {
-                        String isbn = parts[1];
-
-                        library.returnBook(isbn);
+                        library.returnBook(parts[1]);
 
                         System.out.println("Book returned successfully.");
                     }
-
                 } catch (RuntimeException e) {
                     System.out.println("Error: " + e.getMessage());
                 }
@@ -291,9 +289,7 @@ public class Library {
                         System.out.println(
                                 "Error: list format is list isbn");
                     } else {
-                        String isbn = parts[1];
-
-                        Book book = library.findByISBN(isbn);
+                        Book book = library.findByISBN(parts[1]);
 
                         System.out.println("Title: " + book.getTitle());
                         System.out.println("Author: " + book.getAuthor());
@@ -303,7 +299,6 @@ public class Library {
                         System.out.println("Available copies: "
                                 + book.getAvailableCopies());
                     }
-
                 } catch (RuntimeException e) {
                     System.out.println("Error: " + e.getMessage());
                 }
@@ -326,7 +321,6 @@ public class Library {
 
                         System.out.println("Library saved successfully.");
                     }
-
                 } catch (RuntimeException e) {
                     System.out.println("Error: " + e.getMessage());
                 }
@@ -349,7 +343,6 @@ public class Library {
 
                         System.out.println("Library loaded successfully.");
                     }
-
                 } catch (RuntimeException e) {
                     System.out.println("Error: " + e.getMessage());
                 }
