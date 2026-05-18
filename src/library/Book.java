@@ -18,22 +18,67 @@ public class Book {
     int availableCopies;
 
     /**
-     * Constructor. Most properties (except number of copies are read only)
+     * Constructor. Most properties (except number of copies are read only) Does
+     * not accept whitespace in title, author, or isbn to simplify parsing and
+     * serialization.
      * 
      * @param title the title of the book
      * @param author the author of the book
      * @param isbn the ISBN of the book
      * @param publicationYear the publication year
      * @param numberOfCopies total number of copies
+     * @throws IllegalArgumentException if contains invalid arguments such as
+     * null, whitespace, or negative numbers
      */
     public Book(String title, String author, String isbn,
             int publicationYear, int numberOfCopies) {
+        if (title == null || title.isEmpty()
+                || containsWhitespace(title)) {
+            throw new IllegalArgumentException(
+                    "title must not be null, empty, or contain whitespace");
+        }
+        if (author == null || author.isEmpty()
+                || containsWhitespace(author)) {
+            throw new IllegalArgumentException(
+                    "author must not be null, empty, or contain whitespace");
+        }
+        if (isbn == null || isbn.isEmpty() || containsWhitespace(isbn)) {
+            throw new IllegalArgumentException(
+                    "isbn must not be null, empty, or contain whitespace");
+        }
+        if (publicationYear <= 0) {
+            throw new IllegalArgumentException(
+                    "publicationYear must be positive");
+        }
+        if (numberOfCopies < 0) {
+            throw new IllegalArgumentException(
+                    "numberOfCopies must not be negative");
+        }
+
         this.title = title;
         this.author = author;
         this.isbn = isbn;
         this.publicationYear = publicationYear;
         this.numberOfCopies = numberOfCopies;
         this.availableCopies = numberOfCopies;
+    }
+
+    /**
+     * Helper method to check if a string contains any whitespace characters.
+     * This is used to validate the title, author, and isbn fields since we want
+     * to avoid whitespace in those fields to simplify parsing and
+     * serialization.
+     *
+     * @param str the string to check
+     * @return true if the string contains whitespace, false otherwise
+     */
+    private static boolean containsWhitespace(String str) {
+        for (int i = 0; i < str.length(); i++) {
+            if (Character.isWhitespace(str.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -91,10 +136,21 @@ public class Book {
     }
 
     /**
-     * Adds the given mumber of copies of this book to the library.
+     * Adds the given number of copies to this book. increments both
+     * numberOfCopies and availableCopies since we assume that new copies are
+     * available when added.
+     * 
+     * 
+     * @param numCopiesToAdd the number of copies to add
+     * @throws IllegalArgumentException if numCopiesToAdd is negative
      */
     public void addCopies(int numCopiesToAdd) {
+        if (numCopiesToAdd < 0) {
+            throw new IllegalArgumentException(
+                    "numCopiesToAdd must not be negative");
+        }
         numberOfCopies += numCopiesToAdd;
+        availableCopies += numCopiesToAdd;
     }
 
     /**
@@ -142,9 +198,18 @@ public class Book {
                 && Objects.equals(this.isbn, other.isbn);
     }
 
+    /**
+     * Returns a string representation of this book, including all its
+     * properties.
+     * 
+     * @returns a string representation of this book
+     */
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("Not implemented");
+        return String.format(
+                "\"%s\" by %s (ISBN: %s, %d) - %d/%d copies available",
+                title, author, isbn, publicationYear, availableCopies,
+                numberOfCopies);
     }
 
     /**
