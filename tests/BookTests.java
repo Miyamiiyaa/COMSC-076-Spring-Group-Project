@@ -75,6 +75,20 @@ public class BookTests {
         assertThrows(IllegalArgumentException.class,
                 () -> new Book(TITLE, AUTHOR, "", YEAR, COPIES),
                 "Empty ISBN should be rejected");
+
+        // Prevent whitespace in title, author, and ISBN
+        assertThrows(IllegalArgumentException.class,
+                () -> new Book("Title With Spaces", AUTHOR, ISBN, YEAR,
+                        COPIES),
+                "whitespace in title should be rejected");
+        assertThrows(IllegalArgumentException.class,
+                () -> new Book(TITLE, "Author With Spaces", ISBN, YEAR,
+                        COPIES),
+                "whitespace in author should be rejected");
+        assertThrows(
+                IllegalArgumentException.class, () -> new Book(TITLE,
+                        AUTHOR, "ISBN with spaces", YEAR, COPIES),
+                "whitespace in ISBN should be rejected");
     }
 
     @Test @DisplayName("Enforce reasonable book year")
@@ -152,8 +166,9 @@ public class BookTests {
     @Test @DisplayName("Test check out an unavailable book")
     void testNoAvailableCheckout() {
         book.setAvailableCopies(0);
-        assertThrows(RuntimeException.class, () -> book.checkout(),
-                "checkout with no available copies should throw");
+        assertThrows(IllegalStateException.class, () -> book.checkout(),
+                "checkout with no available copies should throw "
+                        + "IllegalStateException");
     }
 
     @Test @DisplayName("Test proper check in")
@@ -182,8 +197,9 @@ public class BookTests {
     void testMoreCopiesCheckIn() {
         // Error should be thrown if we try to check in more copies than total
         // since should be no copies checked out.
-        assertThrows(RuntimeException.class, () -> book.checkin(),
-                "checkin with no copies checked out should throw");
+        assertThrows(IllegalStateException.class, () -> book.checkin(),
+                "checkin with no copies checked out should throw "
+                        + "IllegalStateException");
     }
 
     @Test @DisplayName("Test adding new copies")
@@ -337,8 +353,8 @@ public class BookTests {
     @Test @DisplayName("Test serdes must handle"
             + " escaping special characters")
     void testSerializationSpecialChars() {
-        Book tricky = new Book("Title with \"quotes\" and \\ backslash",
-                "Author, with commas", "ISBN-special", YEAR, COPIES);
+        Book tricky = new Book("Title_with_\"quotes\"_and_\\_backslash",
+                "Author,_with_commas", "ISBN-special", YEAR, COPIES);
         Book restored = Book.fromSerialized(tricky.toSerialized());
 
         assertEquals(tricky.getTitle(), restored.getTitle(),
