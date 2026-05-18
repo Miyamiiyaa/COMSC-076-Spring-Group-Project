@@ -27,6 +27,8 @@ public class Library {
     /**
      * Adds a book to the library. If the library already has this book then it
      * adds the number of copies the library has.
+     * 
+     * @param book the book to add
      */
     public void addBook(Book book) {
         String isbn = book.getISBN();
@@ -41,11 +43,11 @@ public class Library {
         }
     }
 
-   /**
- * Removes a book from the library using its ISBN.
- *
- * @param isbn the ISBN of the book to remove
- */
+    /**
+     * Removes a book from the library using its ISBN.
+     *
+     * @param isbn the ISBN of the book to remove
+     */
     public void removeBook(String isbn) {
         if (!books.containsKey(isbn)) {
             throw new java.util.NoSuchElementException(
@@ -58,6 +60,8 @@ public class Library {
     /**
      * Checks out the given book from the library. Throw the appropriate
      * exception if book doesnt exist or there are no more copies available.
+     * 
+     * @Pparam isbn the ISBN of the book to check out
      */
     public void checkout(String isbn) {
         // TODO: Implement this method.
@@ -66,6 +70,8 @@ public class Library {
 
     /**
      * Returns a book to the library
+     * 
+     * @param isbn the ISBN of the book to return
      */
     public void returnBook(String isnb) {
         // TODO: Implement this method.
@@ -75,6 +81,9 @@ public class Library {
     /**
      * Finds this book in the library. Throws appropriate exception if the book
      * doesnt exist.
+     * 
+     * @param title the title of the book to find
+     * @param author the author of the book to find
      */
     public Book findByTitleAndAuthor(String title, String author) {
         // TODO: Implement this method.
@@ -84,6 +93,8 @@ public class Library {
     /**
      * Finds this book in the library. Throws appropriate exception if the book
      * doesnt exist.
+     * 
+     * @param isbn the ISBN of the book to find
      */
     public Book findByISBN(String isbn) {
         // TODO: Implement this method.
@@ -92,6 +103,8 @@ public class Library {
 
     /**
      * Saves the contents of this library to the given file.
+     * 
+     * @param filename the name of the file
      */
     public void save(String filename) {
         try (PrintWriter writer = new PrintWriter(filename)) {
@@ -136,6 +149,8 @@ public class Library {
     /**
      * Loads the contents of this library from the given file. All existing data
      * in this library is cleared before loading from the file.
+     * 
+     * @param filename the name of the file
      */
     public void load(String filename) {
         try {
@@ -164,6 +179,11 @@ public class Library {
         }
     }
 
+    /**
+     * The main method of the program.
+     * 
+     * @param args
+     */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Library library = new Library();
@@ -185,38 +205,30 @@ public class Library {
                     if (parts.length != 6) {
                         System.out.println(
                                 "Error: add format is add title author "
-                                + "isbn publicationYear numberOfCopies");
+                                        + "isbn publicationYear numberOfCopies");
                     } else {
                         String title = parts[1];
                         String author = parts[2];
                         String isbn = parts[3];
 
-                        int publicationYear =
-                                Integer.parseInt(parts[4]);
+                        int publicationYear = Integer.parseInt(parts[4]);
 
-                        int numberOfCopies =
-                                Integer.parseInt(parts[5]);
+                        int numberOfCopies = Integer.parseInt(parts[5]);
 
-                        Book book = new Book(
-                                title,
-                                author,
-                                isbn,
-                                publicationYear,
-                                numberOfCopies);
+                        Book book = new Book(title, author, isbn,
+                                publicationYear, numberOfCopies);
 
                         library.addBook(book);
 
-                        System.out.println(
-                                "Book added successfully.");
+                        System.out.println("Book added successfully.");
                     }
 
                 } catch (NumberFormatException e) {
-                    System.out.println(
-                            "Error: publication year and number "
-                            + "of copies must be numbers.");
+                    System.out
+                            .println("Error: publication year and number "
+                                    + "of copies must be numbers.");
                 } catch (RuntimeException e) {
-                    System.out.println(
-                            "Error: " + e.getMessage());
+                    System.out.println("Error: " + e.getMessage());
                 }
 
             } else if (line.startsWith("remove")) {
@@ -235,13 +247,11 @@ public class Library {
 
                         library.removeBook(isbn);
 
-                        System.out.println(
-                                "Book removed successfully.");
+                        System.out.println("Book removed successfully.");
                     }
 
                 } catch (RuntimeException e) {
-                    System.out.println(
-                            "Error: " + e.getMessage());
+                    System.out.println("Error: " + e.getMessage());
                 }
 
             } else if (line.startsWith("checkout")) {

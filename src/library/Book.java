@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Encapusulates information about a book.
  * 
- * @author Balaji Srinivasan
+ * @author our names
  */
 public class Book {
     String title;
@@ -80,6 +80,10 @@ public class Book {
 
     /**
      * Sets the number of available copies. Just used for testing.
+     * 
+     * @throws IllegalArgumentException if numCopies is negative or greater than
+     * total number of copies.
+     * @param numCopies the number of available copies to set
      */
     public void setAvailableCopies(int numCopies) {
         if (numCopies < 0 || numCopies > numberOfCopies) {
@@ -92,6 +96,9 @@ public class Book {
 
     /**
      * Adds the given mumber of copies of this book to the library.
+     * 
+     * @throws IllegalArgumentException if numCopiesToAdd is negative.
+     * @param numCopiesToAdd the number of copies to add
      */
     public void addCopies(int numCopiesToAdd) {
         numberOfCopies += numCopiesToAdd;
@@ -117,11 +124,22 @@ public class Book {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    /**
+     * Returns the hash code for this book.
+     * 
+     * @return the hash code
+     */
     @Override
     public int hashCode() {
         return Objects.hash(title, author, isbn);
     }
 
+    /**
+     * Checks if this book is equal to another object.
+     * 
+     * @param obj the object to compare with
+     * @return true if the objects are equal, false otherwise
+     */
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -136,15 +154,31 @@ public class Book {
                 && Objects.equals(this.isbn, other.isbn);
     }
 
+    /**
+     * Returns a string representation of this book.
+     * 
+     * @return a string representation of the book
+     */
     @Override
     public String toString() {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    /**
+     * Creates a book instance from a JSON string.
+     * 
+     * @param json the JSON string representing the book
+     * @return a book instance
+     */
     public static Book fromSerialized(String json) {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    /**
+     * Returns a JSON string representation of this book.
+     * 
+     * @return a JSON string representation of the book
+     */
     public String toSerialized() {
         throw new UnsupportedOperationException("Not implemented");
     }
