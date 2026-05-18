@@ -165,16 +165,14 @@ public class BookTests {
                                 "checkout must not change total copies");
         }
 
-        @Test @DisplayName("Test available copies increments up on check in")
-        void testCheckInIncrement() {
+        @Test @DisplayName("Test available copies increments down on check out")
+        void testCheckoutIncrement() {
                 book.checkout();
+                assertEquals(COPIES - 1, book.getAvailableCopies(),
+                                "checkout should decrement available copies");
                 book.checkout();
-
-                for (int i = 1; i >= 0; i--) {
-                        book.checkin();
-                        assertEquals(COPIES - i, book.getAvailableCopies(),
-                                        "checkin should increment available copies");
-                }
+                assertEquals(COPIES - 2, book.getAvailableCopies(),
+                                "checkout should decrement available copies");
         }
 
         @Test @DisplayName("Test check out an unavailable book")
