@@ -47,11 +47,7 @@ public class Library {
      * @param isbn the ISBN of the book to remove
      */
     public void removeBook(String isbn) {
-        if (!books.containsKey(isbn)) {
-            throw new java.util.NoSuchElementException(
-                    "Book with ISBN " + isbn + " does not exist.");
-        }
-
+        findByISBN(isbn); // validates null + existence
         books.remove(isbn);
     }
 
