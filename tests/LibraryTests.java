@@ -137,7 +137,8 @@ public class LibraryTests {
                 "rejected add must not change copy count");
     }
 
-    @Test @DisplayName("Removing an existing book decreases the unique book count")
+    @Test @DisplayName("Removing an existing book"
+            + "decreases the unique book count")
     void testRemoveExistingBook() {
         library.addBook(book);
         library.addBook(otherBook);
@@ -188,7 +189,8 @@ public class LibraryTests {
                 "checkout must not change total copies");
     }
 
-    @Test @DisplayName("Checkout on non-existent ISBN throws NoSuchElementException")
+    @Test @DisplayName("Checkout on non-existent"
+            + " ISBN throws NoSuchElementException")
     void testCheckoutMissingBook() {
         assertThrows(NoSuchElementException.class,
                 () -> library.checkout(ISBN),
