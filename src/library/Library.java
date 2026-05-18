@@ -1,44 +1,55 @@
 package library;
 
-import java.util.HashMap;
-import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.io.UncheckedIOException;
+import java.util.HashMap;
+import java.util.Scanner;
 
 /**
  * A library management class. Has a simple shell that users can interact with
  * to add/remove/checkout/list books in the library. Also allows saving the
  * library state to a file and reloading it from the file.
+ *
+ * @author Balaji Srinivasan
  */
 public class Library {
 
-    // Using HashMap as the data structure for storing books in the library
-    HashMap<String, Book> books = new HashMap<>(); // key is ISBN of the book
+    HashMap<String, Book> books = new HashMap<>();
 
     /**
-     * @return the number of books (not number of copies) in the library.
+     * @return the number of books, not the number of copies, in the library
      */
     public int getNumberOfBooks() {
-        return books.size(); // returns the number of books, excluding multiple
-                             // copies of each book.
+        return books.size();
     }
 
     /**
      * Adds a book to the library. If the library already has this book then it
      * adds the number of copies the library has.
-     * 
+     *
      * @param book the book to add
+     * @throws IllegalArgumentException if book is null or the ISBN already
+     *         belongs to a different book
      */
     public void addBook(Book book) {
+        if (book == null) {
+            throw new IllegalArgumentException("Book must not be null");
+        }
+
         String isbn = book.getISBN();
 
         if (books.containsKey(isbn)) {
-            // book already exists, increment the number of copies
             Book existingBook = books.get(isbn);
+
+            if (!existingBook.equals(book)) {
+                throw new IllegalArgumentException(
+                        "ISBN already belongs to a different book");
+            }
+
             existingBook.addCopies(book.getNumberOfCopies());
         } else {
-            // book doesnt exist in the library. Add it to the library.
             books.put(isbn, book);
         }
     }
@@ -47,8 +58,6 @@ public class Library {
      * Removes the book with the given ISBN from the library.
      *
      * @param isbn the ISBN of the book to remove
-     * @throws IllegalArgumentException if isbn is null
-     * @throws java.util.NoSuchElementException if no book has that ISBN
      */
     public void removeBook(String isbn) {
         findByISBN(isbn);
@@ -58,9 +67,7 @@ public class Library {
     /**
      * Checks out one copy of the book with the given ISBN.
      *
-     * @throws IllegalArgumentException if isbn is null
-     * @throws java.util.NoSuchElementException if no book has that ISBN
-     * @throws IllegalStateException if no copies are available
+     * @param isbn the ISBN of the book to check out
      */
     public void checkout(String isbn) {
         findByISBN(isbn).checkout();
@@ -70,9 +77,6 @@ public class Library {
      * Returns one copy of the book with the given ISBN.
      *
      * @param isbn the ISBN of the book to return
-     * @throws IllegalArgumentException if isbn is null
-     * @throws java.util.NoSuchElementException if no book has that ISBN
-     * @throws IllegalStateException if no copies are currently checked out
      */
     public void returnBook(String isbn) {
         findByISBN(isbn).checkin();
@@ -81,18 +85,15 @@ public class Library {
     /**
      * Finds this book in the library. O(n) time complexity because it must
      * traverse the entire library.
-     * 
-     * 
-     * @param title the title of the book to find (not null)
-     * @param author the author of the book to find (not null)
+     *
+     * @param title the title of the book to find
+     * @param author the author of the book to find
      * @return the book if both the title and author match
-     * @throws IllegalArgumentException if title or author is null
-     * @throws java.util.NoSuchElementException if the book doesnt exist
      */
     public Book findByTitleAndAuthor(String title, String author) {
         if (title == null || author == null) {
             throw new IllegalArgumentException(
-                    "TItle and Author must not be null");
+                    "Title and Author must not be null");
         }
 
         for (Book book : books.values()) {
@@ -107,28 +108,28 @@ public class Library {
     }
 
     /**
-     * Finds a book returnBookin the library by its ISBN.
+     * Finds a book in the library by its ISBN.
      *
-     * @param isbn the ISBN to search for (must not be null)
+     * @param isbn the ISBN to search for
      * @return the Book with the given ISBN
-     * @throws IllegalArgumentException if isbn is null
-     * @throws java.util.NoSuchElementException if no book has that ISBN
      */
     public Book findByISBN(String isbn) {
         if (isbn == null) {
             throw new IllegalArgumentException("isbn must not be null");
         }
+
         if (!books.containsKey(isbn)) {
             throw new java.util.NoSuchElementException(
                     "Book with ISBN " + isbn + " does not exist.");
         }
+
         return books.get(isbn);
     }
 
     /**
      * Saves the contents of this library to the given file.
-     * 
-     * @param filename the name of the file
+     *
+     * @param filename the name of the file to save to
      */
     public void save(String filename) {
         try {
@@ -140,15 +141,16 @@ public class Library {
 
             writer.close();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Could not save file: " + filename);
+            throw new UncheckedIOException(
+                    "Could not save file: " + filename, e);
         }
     }
 
     /**
      * Loads the contents of this library from the given file. All existing data
      * in this library is cleared before loading from the file.
-     * 
-     * @param filename the name of the file
+     *
+     * @param filename the name of the file to load from
      */
     public void load(String filename) {
         try {
@@ -164,44 +166,41 @@ public class Library {
 
             scanner.close();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Could not load file: " + filename);
+            throw new UncheckedIOException(
+                    "Could not load file: " + filename, e);
         }
     }
 
     /**
      * The main method of the program.
-     * 
-     * @param args
+     *
+     * @param args command-line arguments
      */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Library library = new Library();
 
-        while (true) {
-            System.out.print("library> ");
-            String line = scanner.nextLine();
-            // TODO: Implement code
-            if (line.startsWith("add")) {
-                // The format of the line is
-                // add title author isbn publicationYear numberOfCopies
-                // e.g. add Star_Trek Gene_Roddenberry ISBN-1234 1965 10
-                // NOTE: If a book already exists in the library, then the
-                // number of copies should be incremented by this amount.
+        boolean keepRunning = true;
 
+        while (keepRunning) {
+            System.out.print("library> ");
+            String line = scanner.nextLine().trim();
+
+            if (line.startsWith("add")) {
                 try {
                     String[] parts = line.split("\\s+");
 
                     if (parts.length != 6) {
                         System.out.println(
                                 "Error: add format is add title author "
-                                        + "isbn publicationYear numberOfCopies");
+                                        + "isbn publicationYear "
+                                        + "numberOfCopies");
                     } else {
                         String title = parts[1];
                         String author = parts[2];
                         String isbn = parts[3];
 
                         int publicationYear = Integer.parseInt(parts[4]);
-
                         int numberOfCopies = Integer.parseInt(parts[5]);
 
                         Book book = new Book(title, author, isbn,
@@ -213,18 +212,14 @@ public class Library {
                     }
 
                 } catch (NumberFormatException e) {
-                    System.out
-                            .println("Error: publication year and number "
+                    System.out.println(
+                            "Error: publication year and number "
                                     + "of copies must be numbers.");
-                } catch (RuntimeException e) {
+                } catch (Exception e) {
                     System.out.println("Error: " + e.getMessage());
                 }
 
             } else if (line.startsWith("remove")) {
-                // Format of the line is
-                // remove <isbn>
-                // e.g. remove ISBN-1234
-
                 try {
                     String[] parts = line.split("\\s+");
 
@@ -232,83 +227,154 @@ public class Library {
                         System.out.println(
                                 "Error: remove format is remove isbn");
                     } else {
-                        String isbn = parts[1];
+                        library.removeBook(parts[1]);
 
-                        library.removeBook(isbn);
-
-                        System.out.println("Book removed successfully.");
+                        System.out.println(
+                                "Book removed successfully.");
                     }
 
-                } catch (RuntimeException e) {
+                } catch (Exception e) {
                     System.out.println("Error: " + e.getMessage());
                 }
 
             } else if (line.startsWith("checkout")) {
-                // TODO: Implement this case.
-                // The format of the line is
-                // checkout isbn
-                // e.g. checkout ISBN-1234
-                // NOTE: If the book doesnt exist in the library, then the code
-                // should print an error.
+                try {
+                    String[] parts = line.split("\\s+");
+
+                    if (parts.length != 2) {
+                        System.out.println(
+                                "Error: checkout format is "
+                                        + "checkout isbn");
+                    } else {
+                        library.checkout(parts[1]);
+
+                        System.out.println(
+                                "Book checked out successfully.");
+                    }
+
+                } catch (Exception e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
 
             } else if (line.startsWith("findByTitleAndAuthor")) {
-                // TODO: Implement this case.
-                // The format of the line is
-                // findByTitleAndAuthor <title> <author>
-                // e.g. findByTitleAndAuthor Star_Trek Gene_Roddenberry
-                // NOTE: If the book doesnt exist in the library, then the code
-                // should print an error.
-                // If the book exists in the library, this code should print the
-                // ISBN, number of copies in the library, and the number of
-                // copies availabvle
+                try {
+                    String[] parts = line.split("\\s+");
+
+                    if (parts.length != 3) {
+                        System.out.println(
+                                "Error: findByTitleAndAuthor "
+                                        + "format is "
+                                        + "findByTitleAndAuthor "
+                                        + "title author");
+                    } else {
+                        Book book = library.findByTitleAndAuthor(
+                                parts[1], parts[2]);
+
+                        System.out.println(book);
+                    }
+
+                } catch (Exception e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
 
             } else if (line.startsWith("return")) {
-                // TODO: Implement this case.
-                // Format of the line is
-                // return <isbn>
-                // e.g. return ISBN-1234
-                // NOTE: If the book was never checked out, this code should
-                // print an error.
+                try {
+                    String[] parts = line.split("\\s+");
+
+                    if (parts.length != 2) {
+                        System.out.println(
+                                "Error: return format is return isbn");
+                    } else {
+                        library.returnBook(parts[1]);
+
+                        System.out.println(
+                                "Book returned successfully.");
+                    }
+
+                } catch (Exception e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
 
             } else if (line.startsWith("list")) {
-                // TODO: Implement this case.
-                // Format of the line is
-                // list <isnb>
-                // e.g. list ISBN-1234
-                // NOTE: This code should print out the number of copies in the
-                // library and the number of copies available.
+                try {
+                    String[] parts = line.split("\\s+");
+
+                    if (parts.length != 2) {
+                        System.out.println(
+                                "Error: list format is list isbn");
+                    } else {
+                        Book book = library.findByISBN(parts[1]);
+
+                        System.out.println(book);
+                    }
+
+                } catch (Exception e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
 
             } else if (line.startsWith("save")) {
-                // TODO: Implement this case.
-                // Format of the line is
-                // save <filename>
-                // e.g. save LbraryFile.dat
+                try {
+                    String[] parts = line.split("\\s+");
 
-                String[] parts = line.split(" ");
-                String filename = parts[1];
+                    if (parts.length != 2) {
+                        System.out.println(
+                                "Error: save format is "
+                                        + "save filename");
+                    } else {
+                        String filename = parts[1];
 
-                if (!filename.endsWith(".json")) {
-                    filename += ".json";
+                        if (!filename.endsWith(".json")) {
+                            filename += ".json";
+                        }
+
+                        library.save(filename);
+
+                        System.out.println(
+                                "Library saved successfully.");
+                    }
+
+                } catch (Exception e) {
+                    System.out.println("Error: " + e.getMessage());
                 }
-                library.save(filename);
 
             } else if (line.startsWith("load")) {
-                // TODO: Implement this case.
-                // Format of the line is:
-                // load <filename>
-                // e.g. load LibraryFile.dat
-                String[] parts = line.split(" ");
-                String filename = parts[1];
+                try {
+                    String[] parts = line.split("\\s+");
 
-                if (!filename.endsWith(".json")) {
-                    filename += ".json";
+                    if (parts.length != 2) {
+                        System.out.println(
+                                "Error: load format is "
+                                        + "load filename");
+                    } else {
+                        String filename = parts[1];
+
+                        if (!filename.endsWith(".json")) {
+                            filename += ".json";
+                        }
+
+                        library.load(filename);
+
+                        System.out.println(
+                                "Library loaded successfully.");
+                    }
+
+                } catch (Exception e) {
+                    System.out.println("Error: " + e.getMessage());
                 }
 
-                library.load(filename);
-
             } else if (line.startsWith("exit")) {
-                break;
+                keepRunning = false;
+
+            } else if (line.length() == 0) {
+                System.out.println(
+                        "Error: please enter a command.");
+
+            } else {
+                System.out.println(
+                        "Error: unknown command");
             }
         }
+
+        scanner.close();
     }
 }
