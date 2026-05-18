@@ -147,11 +147,22 @@ public class Book {
      * @return reconstructed Book object
      */
     public static Book fromSerialized(String line) {
-        String [] parts = line.split(" ");
+        if (line == null) {
+            throw new IllegalArgumentException(
+                    "Serialized data cannot be null");
+        }
+        
+        String [] parts = line.split("\\|");
+        
+        if (parts.length != 6) {
+            throw new IllegalArgumentException(
+                    "Invalid serialized book format");
+        }
         
         String title = parts[0];
         String author = parts[1];
         String isbn = parts[2];
+        
         int publicationYear = Integer.parseInt(parts[3]);
         int numberOfCopies = Integer.parseInt(parts[4]);
         int availableCopies = Integer.parseInt(parts[5]);
@@ -173,11 +184,11 @@ public class Book {
      * @return serialized representation of this book
      */
     public String toSerialized() {
-        return title + " "
-                + author + " "
-                + isbn + " "
-                + publicationYear + " "
-                + numberOfCopies + " "
+        return title + "|"
+                + author + "|"
+                + isbn + "|"
+                + publicationYear + "|"
+                + numberOfCopies + "|"
                 + availableCopies;
     }
 }
