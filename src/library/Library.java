@@ -117,6 +117,7 @@ public class Library {
         if (isbn == null) {
             throw new IllegalArgumentException("isbn must not be null");
         }
+
         if (!books.containsKey(isbn)) {
             throw new java.util.NoSuchElementException(
                     "Book with ISBN " + isbn + " does not exist.");
@@ -170,6 +171,11 @@ public class Library {
         }
     }
 
+    /**
+     * The main method of the program.
+     *
+     * @param args command-line arguments
+     */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Library library = new Library();
@@ -187,7 +193,8 @@ public class Library {
                     if (parts.length != 6) {
                         System.out.println(
                                 "Error: add format is add title author "
-                                        + "isbn publicationYear numberOfCopies");
+                                        + "isbn publicationYear "
+                                        + "numberOfCopies");
                     } else {
                         String title = parts[1];
                         String author = parts[2];
@@ -203,6 +210,7 @@ public class Library {
 
                         System.out.println("Book added successfully.");
                     }
+
                 } catch (NumberFormatException e) {
                     System.out.println(
                             "Error: publication year and number "
@@ -221,8 +229,10 @@ public class Library {
                     } else {
                         library.removeBook(parts[1]);
 
-                        System.out.println("Book removed successfully.");
+                        System.out.println(
+                                "Book removed successfully.");
                     }
+
                 } catch (RuntimeException e) {
                     System.out.println("Error: " + e.getMessage());
                 }
@@ -233,12 +243,15 @@ public class Library {
 
                     if (parts.length != 2) {
                         System.out.println(
-                                "Error: checkout format is checkout isbn");
+                                "Error: checkout format is "
+                                        + "checkout isbn");
                     } else {
                         library.checkout(parts[1]);
 
-                        System.out.println("Book checked out successfully.");
+                        System.out.println(
+                                "Book checked out successfully.");
                     }
+
                 } catch (RuntimeException e) {
                     System.out.println("Error: " + e.getMessage());
                 }
@@ -249,18 +262,26 @@ public class Library {
 
                     if (parts.length != 3) {
                         System.out.println(
-                                "Error: findByTitleAndAuthor format is "
-                                        + "findByTitleAndAuthor title author");
+                                "Error: findByTitleAndAuthor "
+                                        + "format is "
+                                        + "findByTitleAndAuthor "
+                                        + "title author");
                     } else {
-                        Book book = library.findByTitleAndAuthor(parts[1],
-                                parts[2]);
+                        Book book = library.findByTitleAndAuthor(
+                                parts[1], parts[2]);
 
-                        System.out.println("ISBN: " + book.getISBN());
-                        System.out.println("Total copies: "
-                                + book.getNumberOfCopies());
-                        System.out.println("Available copies: "
-                                + book.getAvailableCopies());
+                        System.out.println(
+                                "ISBN: " + book.getISBN());
+
+                        System.out.println(
+                                "Total copies: "
+                                        + book.getNumberOfCopies());
+
+                        System.out.println(
+                                "Available copies: "
+                                        + book.getAvailableCopies());
                     }
+
                 } catch (RuntimeException e) {
                     System.out.println("Error: " + e.getMessage());
                 }
@@ -275,8 +296,10 @@ public class Library {
                     } else {
                         library.returnBook(parts[1]);
 
-                        System.out.println("Book returned successfully.");
+                        System.out.println(
+                                "Book returned successfully.");
                     }
+
                 } catch (RuntimeException e) {
                     System.out.println("Error: " + e.getMessage());
                 }
@@ -291,14 +314,24 @@ public class Library {
                     } else {
                         Book book = library.findByISBN(parts[1]);
 
-                        System.out.println("Title: " + book.getTitle());
-                        System.out.println("Author: " + book.getAuthor());
-                        System.out.println("ISBN: " + book.getISBN());
-                        System.out.println("Total copies: "
-                                + book.getNumberOfCopies());
-                        System.out.println("Available copies: "
-                                + book.getAvailableCopies());
+                        System.out.println(
+                                "Title: " + book.getTitle());
+
+                        System.out.println(
+                                "Author: " + book.getAuthor());
+
+                        System.out.println(
+                                "ISBN: " + book.getISBN());
+
+                        System.out.println(
+                                "Total copies: "
+                                        + book.getNumberOfCopies());
+
+                        System.out.println(
+                                "Available copies: "
+                                        + book.getAvailableCopies());
                     }
+
                 } catch (RuntimeException e) {
                     System.out.println("Error: " + e.getMessage());
                 }
@@ -309,7 +342,8 @@ public class Library {
 
                     if (parts.length != 2) {
                         System.out.println(
-                                "Error: save format is save filename");
+                                "Error: save format is "
+                                        + "save filename");
                     } else {
                         String filename = parts[1];
 
@@ -319,8 +353,10 @@ public class Library {
 
                         library.save(filename);
 
-                        System.out.println("Library saved successfully.");
+                        System.out.println(
+                                "Library saved successfully.");
                     }
+
                 } catch (RuntimeException e) {
                     System.out.println("Error: " + e.getMessage());
                 }
@@ -331,7 +367,8 @@ public class Library {
 
                     if (parts.length != 2) {
                         System.out.println(
-                                "Error: load format is load filename");
+                                "Error: load format is "
+                                        + "load filename");
                     } else {
                         String filename = parts[1];
 
@@ -341,8 +378,10 @@ public class Library {
 
                         library.load(filename);
 
-                        System.out.println("Library loaded successfully.");
+                        System.out.println(
+                                "Library loaded successfully.");
                     }
+
                 } catch (RuntimeException e) {
                     System.out.println("Error: " + e.getMessage());
                 }
@@ -351,10 +390,12 @@ public class Library {
                 keepRunning = false;
 
             } else if (line.length() == 0) {
-                System.out.println("Error: please enter a command.");
+                System.out.println(
+                        "Error: please enter a command.");
 
             } else {
-                System.out.println("Error: unknown command");
+                System.out.println(
+                        "Error: unknown command");
             }
         }
 

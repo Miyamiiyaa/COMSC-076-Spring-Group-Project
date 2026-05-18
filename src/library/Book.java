@@ -5,7 +5,7 @@ import java.util.Objects;
 /**
  * Encapusulates information about a book.
  * 
- * @author Balaji Srinivasan
+ * @author our names
  */
 public class Book {
     String title;
@@ -18,22 +18,67 @@ public class Book {
     int availableCopies;
 
     /**
-     * Constructor. Most properties (except number of copies are read only)
+     * Constructor. Most properties (except number of copies are read only) Does
+     * not accept whitespace in title, author, or isbn to simplify parsing and
+     * serialization.
      * 
      * @param title the title of the book
      * @param author the author of the book
      * @param isbn the ISBN of the book
      * @param publicationYear the publication year
      * @param numberOfCopies total number of copies
+     * @throws IllegalArgumentException if contains invalid arguments such as
+     * null, whitespace, or negative numbers
      */
     public Book(String title, String author, String isbn,
             int publicationYear, int numberOfCopies) {
+        if (title == null || title.isEmpty()
+                || containsWhitespace(title)) {
+            throw new IllegalArgumentException(
+                    "title must not be null, empty, or contain whitespace");
+        }
+        if (author == null || author.isEmpty()
+                || containsWhitespace(author)) {
+            throw new IllegalArgumentException(
+                    "author must not be null, empty, or contain whitespace");
+        }
+        if (isbn == null || isbn.isEmpty() || containsWhitespace(isbn)) {
+            throw new IllegalArgumentException(
+                    "isbn must not be null, empty, or contain whitespace");
+        }
+        if (publicationYear <= 0) {
+            throw new IllegalArgumentException(
+                    "publicationYear must be positive");
+        }
+        if (numberOfCopies < 0) {
+            throw new IllegalArgumentException(
+                    "numberOfCopies must not be negative");
+        }
+
         this.title = title;
         this.author = author;
         this.isbn = isbn;
         this.publicationYear = publicationYear;
         this.numberOfCopies = numberOfCopies;
         this.availableCopies = numberOfCopies;
+    }
+
+    /**
+     * Helper method to check if a string contains any whitespace characters.
+     * This is used to validate the title, author, and isbn fields since we want
+     * to avoid whitespace in those fields to simplify parsing and
+     * serialization.
+     *
+     * @param str the string to check
+     * @return true if the string contains whitespace, false otherwise
+     */
+    private static boolean containsWhitespace(String str) {
+        for (int i = 0; i < str.length(); i++) {
+            if (Character.isWhitespace(str.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -80,6 +125,10 @@ public class Book {
 
     /**
      * Sets the number of available copies. Just used for testing.
+     * 
+     * @throws IllegalArgumentException if numCopies is negative or greater than
+     * total number of copies.
+     * @param numCopies the number of available copies to set
      */
     public void setAvailableCopies(int numCopies) {
         if (numCopies < 0 || numCopies > numberOfCopies) {
@@ -91,10 +140,21 @@ public class Book {
     }
 
     /**
-     * Adds the given mumber of copies of this book to the library.
+     * Adds the given number of copies to this book. increments both
+     * numberOfCopies and availableCopies since we assume that new copies are
+     * available when added.
+     * 
+     * 
+     * @param numCopiesToAdd the number of copies to add
+     * @throws IllegalArgumentException if numCopiesToAdd is negative
      */
     public void addCopies(int numCopiesToAdd) {
+        if (numCopiesToAdd < 0) {
+            throw new IllegalArgumentException(
+                    "numCopiesToAdd must not be negative");
+        }
         numberOfCopies += numCopiesToAdd;
+        availableCopies += numCopiesToAdd;
     }
 
     /**
@@ -123,11 +183,22 @@ public class Book {
         availableCopies++;
     }
 
+    /**
+     * Returns the hash code for this book.
+     * 
+     * @return the hash code
+     */
     @Override
     public int hashCode() {
         return Objects.hash(title, author, isbn);
     }
 
+    /**
+     * Checks if this book is equal to another object.
+     * 
+     * @param that the object to compare with
+     * @return true if the objects are equal, false otherwise
+     */
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -142,13 +213,24 @@ public class Book {
                 && Objects.equals(this.isbn, other.isbn);
     }
 
+    /**
+     * Returns a string representation of this book.
+     * 
+     * @return a string representation of the book
+     */
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("Not implemented");
+        return String.format(
+                "\"%s\" by %s (ISBN: %s, %d) - %d/%d copies available",
+                title, author, isbn, publicationYear, availableCopies,
+                numberOfCopies);
     }
 
     /**
-     * Creates a Book from serialized data
+     * Returns a JSON string representation of this book.
+     * 
+     * @return a JSON string representation of the book /** Creates a Book from
+     * serialized data
      * 
      * @param line serialized book data
      * @return reconstructed Book object
