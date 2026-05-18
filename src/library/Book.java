@@ -98,28 +98,28 @@ public class Book {
     }
 
     /**
-     * Checks out a book (decrements number of copies available in the library)
-     * 
-     * @throws IllegalStateException if no copies are available to check out.
+     * Checks out one copy of this book.
+     *
+     * @throws IllegalStateException if no copies are available
      */
     public void checkout() {
         if (availableCopies <= 0) {
-            throw new RuntimeException(
+            throw new IllegalStateException(
                     "No copies available to checkout");
         }
+        availableCopies--;
     }
 
     /**
-     * Checks in a book into the library.
-     * 
-     * @throws IllegalStateException if no copies have been checked out.
+     * Returns one checked-out copy of this book.
+     *
+     * @throws IllegalStateException if no copies have been checked out
      */
     public void checkin() {
         if (availableCopies >= numberOfCopies) {
-            throw new RuntimeException(
+            throw new IllegalStateException(
                     "No checked out copies to return");
         }
-        
         availableCopies++;
     }
 
@@ -146,6 +146,7 @@ public class Book {
     public String toString() {
         throw new UnsupportedOperationException("Not implemented");
     }
+
     /**
      * Creates a Book from serialized data
      * 
@@ -157,44 +158,37 @@ public class Book {
             throw new IllegalArgumentException(
                     "Serialized data cannot be null");
         }
-        
-        String [] parts = line.split("\\|");
-        
+
+        String[] parts = line.split("\\|");
+
         if (parts.length != 6) {
             throw new IllegalArgumentException(
                     "Invalid serialized book format");
         }
-        
+
         String title = parts[0];
         String author = parts[1];
         String isbn = parts[2];
-        
+
         int publicationYear = Integer.parseInt(parts[3]);
         int numberOfCopies = Integer.parseInt(parts[4]);
         int availableCopies = Integer.parseInt(parts[5]);
-        
-        Book book = new Book(
-                title,
-                author,
-                isbn,
-                publicationYear,
+
+        Book book = new Book(title, author, isbn, publicationYear,
                 numberOfCopies);
-        
+
         book.setAvailableCopies(availableCopies);
-        
+
         return book;
     }
+
     /**
      * Serializes this book into a string
      * 
      * @return serialized representation of this book
      */
     public String toSerialized() {
-        return title + "|"
-                + author + "|"
-                + isbn + "|"
-                + publicationYear + "|"
-                + numberOfCopies + "|"
-                + availableCopies;
+        return title + "|" + author + "|" + isbn + "|" + publicationYear
+                + "|" + numberOfCopies + "|" + availableCopies;
     }
 }
