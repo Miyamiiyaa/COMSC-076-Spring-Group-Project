@@ -94,45 +94,20 @@ public class Library {
      * Saves the contents of this library to the given file.
      */
     public void save(String filename) {
-        try (PrintWriter writer = new PrintWriter(filename)) {
+        try {
+            PrintWriter writer = new PrintWriter(filename);
 
-            writer.println("[");
-            int count = 0;
-            int size = books.size();
-
-            for (Book book : books.values()) {
-                writer.println("  {");
-                writer.println(
-                        "    \"title\": \"" + book.getTitle() + "\",");
-                writer.println(
-                        "    \"author\": \"" + book.getAuthor() + "\",");
-                writer.println(
-                        "    \"isbn\": \"" + book.getISBN() + "\",");
-                writer.println("    \"publicationYear\": "
-                        + book.getPublicationYear() + ",");
-                writer.println("    \"numberOfCopies\": "
-                        + book.getNumberOfCopies() + ",");
-                writer.println("    \"availableCopies\": "
-                        + book.getAvailableCopies());
-                writer.print("  }");
-
-                if (++count < size) {
-                    writer.println(",");
-                } else {
-                    writer.println();
-                }
+            for (Book book : booksByIsbn.values()) {
+                writer.println(book.toSerialized());
             }
 
-            writer.println("]");
-
-            System.out.println("Saved to: "
-                    + new java.io.File(filename).getAbsolutePath());
-
+            writer.close();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Could not save file: " + filename);
+            throw new RuntimeException(
+                    "Could not save file: " + filename);
         }
     }
-
+    
     /**
      * Loads the contents of this library from the given file. All existing data
      * in this library is cleared before loading from the file.
@@ -141,26 +116,18 @@ public class Library {
         try {
             Scanner scanner = new Scanner(new File(filename));
 
-            books.clear();
+            booksByIsbn.clear();
 
-            while (scanner.hasNext()) {
-                String title = scanner.next();
-                String author = scanner.next();
-                String isbn = scanner.next();
-                int publicationYear = scanner.nextInt();
-                int numberOfCopies = scanner.nextInt();
-                int availableCopies = scanner.nextInt();
-
-                Book book = new Book(title, author, isbn, publicationYear,
-                        numberOfCopies);
-                book.setAvailableCopies(availableCopies);
-
-                books.put(isbn, book);
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                Book book = Book.fromSerialized(line);
+                booksByIsbn.put(book.getIsbn(), book);
             }
 
             scanner.close();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Could not load file: " + filename);
+            throw new RuntimeException(
+                    "Could not load file: " + filename);
         }
     }
 

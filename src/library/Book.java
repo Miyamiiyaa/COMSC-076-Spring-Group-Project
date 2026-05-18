@@ -140,12 +140,44 @@ public class Book {
     public String toString() {
         throw new UnsupportedOperationException("Not implemented");
     }
-
-    public static Book fromSerialized(String json) {
-        throw new UnsupportedOperationException("Not implemented");
+    /**
+     * Creates a Book from serialized data
+     * 
+     * @param line serialized book data
+     * @return reconstructed Book object
+     */
+    public static Book fromSerialized(String line) {
+        String [] parts = line.split(" ");
+        
+        String title = parts[0];
+        String author = parts[1];
+        String isbn = parts[2];
+        int publicationYear = Integer.parseInt(parts[3]);
+        int numberOfCopies = Integer.parseInt(parts[4]);
+        int availableCopies = Integer.parseInt(parts[5]);
+        
+        Book book = new Book(
+                title,
+                author,
+                isbn,
+                publicationYear,
+                numberOfCopies);
+        
+        book.setAvailableCopies(availableCopies);
+        
+        return book;
     }
-
+    /**
+     * Serializes this book into a string
+     * 
+     * @return serialized representation of this book
+     */
     public String toSerialized() {
-        throw new UnsupportedOperationException("Not implemented");
+        return title + " "
+                + author + " "
+                + isbn + " "
+                + publicationYear + " "
+                + numberOfCopies + " "
+                + availableCopies;
     }
 }
