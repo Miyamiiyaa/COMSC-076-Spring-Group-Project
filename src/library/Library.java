@@ -97,7 +97,7 @@ public class Library {
         try {
             PrintWriter writer = new PrintWriter(filename);
 
-            for (Book book : booksByIsbn.values()) {
+            for (Book book : books.values()) {
                 writer.println(book.toSerialized());
             }
 
@@ -116,12 +116,12 @@ public class Library {
         try {
             Scanner scanner = new Scanner(new File(filename));
 
-            booksByIsbn.clear();
+            books.clear();
 
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 Book book = Book.fromSerialized(line);
-                booksByIsbn.put(book.getIsbn(), book);
+                books.put(book.getISBN(), book);
             }
 
             scanner.close();
