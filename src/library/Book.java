@@ -26,8 +26,7 @@ public class Book {
      * @param publicationYear the publication year
      * @param numberOfCopies total number of copies
      */
-    public Book(
-            String title, String author, String isbn, 
+    public Book(String title, String author, String isbn,
             int publicationYear, int numberOfCopies) {
         this.title = title;
         this.author = author;
@@ -85,7 +84,7 @@ public class Book {
     public void setAvailableCopies(int numCopies) {
         if (numCopies < 0 || numCopies > numberOfCopies) {
             throw new IllegalArgumentException(
-            "Available copies must be between 0 and total copies");
+                    "Available copies must be between 0 and total copies");
         }
 
         availableCopies = numCopies;
@@ -135,5 +134,18 @@ public class Book {
         return Objects.equals(this.title, other.title)
                 && Objects.equals(this.author, other.author)
                 && Objects.equals(this.isbn, other.isbn);
+    }
+
+    @Override
+    public String toString() {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public static Book fromSerialized(String json) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public String toSerialized() {
+        throw new UnsupportedOperationException("Not implemented");
     }
 }
