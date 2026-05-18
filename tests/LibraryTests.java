@@ -48,7 +48,8 @@ public class LibraryTests {
 
     }
 
-    @Test @DisplayName("Test adding an existing book increments copies and doesn't create duplicate")
+    @Test @DisplayName("Test adding an existing book increments"
+            + "copies and doesn't create duplicate")
     void testAddExistingBook() {
 
     }
